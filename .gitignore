@@ -63,3 +63,10 @@ pnpm-lock.yaml
 firebase-service-account.json
 firebase-debug.log
 firebase-debug.*.log
+
+# Security - API Keys and Secrets
+*.key
+*.pem
+*api-key*
+*firebase-config*
+.env.keys

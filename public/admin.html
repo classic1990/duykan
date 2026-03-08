@@ -405,10 +405,10 @@
 
         // Use Firebase config from firebase-init.js
         const firebaseConfig = {
-            apiKey: "AIzaSyC8WxpOMCE-mDjQ43HM9jvsOlI-30T-b6Q",
-            authDomain: "classic-e8ab7.firebaseapp.com",
-            projectId: "classic-e8ab7",
-            storageBucket: "classic-e8ab7.appspot.com",
+            apiKey: process.env.FIREBASE_API_KEY || "your-api-key-here",
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN || "your-project.firebaseapp.com",
+            projectId: process.env.FIREBASE_PROJECT_ID || "your-project-id",
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "your-project.appspot.com",
             messagingSenderId: "596308927760",
             appId: "1:596308927760:web:a12be9b2dffb5bc72cb195"
         };
