@@ -109,7 +109,7 @@ const AdminAPI = {
 
         try {
             const response = await fetch(url, config);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -191,7 +191,7 @@ const AdminUI = {
                 e.preventDefault();
                 const view = item.dataset.view || 'dashboard';
                 this.switchView(view);
-                
+
                 // Update active state
                 sidebarItems.forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
@@ -202,11 +202,11 @@ const AdminUI = {
     // Switch view
     switchView(view) {
         AdminState.currentView = view;
-        
+
         // Hide all views
         const views = document.querySelectorAll('.admin-view');
         views.forEach(v => v.style.display = 'none');
-        
+
         // Show selected view
         const selectedView = document.getElementById(`${view}View`);
         if (selectedView) {
@@ -220,7 +220,7 @@ const AdminUI = {
     // Load view-specific data
     async loadViewData(view) {
         AdminUtils.showLoading();
-        
+
         try {
             switch (view) {
                 case 'dashboard':
@@ -253,7 +253,7 @@ const AdminUI = {
     // Render stats
     renderStats() {
         const stats = AdminState.stats;
-        
+
         document.getElementById('totalMovies').textContent = AdminUtils.formatNumber(stats.totalMovies || 0);
         document.getElementById('totalUsers').textContent = AdminUtils.formatNumber(stats.totalUsers || 0);
         document.getElementById('totalViews').textContent = AdminUtils.formatNumber(stats.totalViews || 0);
@@ -457,7 +457,7 @@ const AdminUI = {
         try {
             AdminUtils.showLoading();
             const result = await AdminAPI.processYouTube(url);
-            
+
             if (result.success) {
                 AdminUtils.showToast('ประมวลอง YouTube URL สำเร็จ', 'success');
                 urlInput.value = '';
@@ -470,6 +470,94 @@ const AdminUI = {
         } finally {
             AdminUtils.hideLoading();
         }
+    },
+
+    // Load users
+    async loadUsers() {
+        try {
+            const users = await AdminAPI.getUsers();
+            AdminState.users = users.data || [];
+            this.renderUsersTable();
+        } catch (error) {
+            console.error('Error loading users:', error);
+            AdminUtils.showToast('โหลดผู้ใช้ล้มเหลว', 'error');
+        }
+    },
+
+    // Render users table
+    renderUsersTable() {
+        const tbody = document.getElementById('usersTableBody');
+        if (!tbody) return;
+
+        if (AdminState.users.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center">ไม่มีข้อมูลผู้ใช้</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = AdminState.users.map(user => `
+            <tr>
+                <td>
+                    <img src="${user.avatar || '/build/assets/images/default-avatar.jpg'}" 
+                         alt="${user.displayName}" 
+                         class="user-thumbnail">
+                </td>
+                <td>
+                    <div class="user-info">
+                        <h4>${user.displayName}</h4>
+                        <p>${user.email}</p>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge badge-${user.role || 'user'}">
+                        ${user.role || 'user'}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-${user.status || 'active'}">
+                        ${user.status || 'active'}
+                    </span>
+                </td>
+                <td>${AdminUtils.formatDate(user.createdAt || new Date())}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="admin-btn admin-btn-sm admin-btn-primary" 
+                                onclick="AdminUI.editUser('${user.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="admin-btn admin-btn-sm admin-btn-danger" 
+                                onclick="AdminUI.deleteUser('${user.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    },
+
+    // Edit user
+    editUser(id) {
+        const user = AdminState.users.find(u => u.id === id);
+        if (user) {
+            AdminUtils.showToast('แก้ไขผู้ใช้: ' + user.displayName, 'info');
+        }
+    },
+
+    // Delete user
+    deleteUser(id) {
+        AdminUtils.confirm('คุณต้องการลบผู้ใช้นี้ใช่หรือ?', async () => {
+            try {
+                // Mock delete user API
+                AdminState.users = AdminState.users.filter(u => u.id !== id);
+                this.renderUsersTable();
+                AdminUtils.showToast('ลบผู้ใช้สำเร็จ', 'success');
+            } catch (error) {
+                AdminUtils.showToast('ลบผู้ใช้ล้มเหลว', 'error');
+            }
+        });
     },
 
     // Load initial data
