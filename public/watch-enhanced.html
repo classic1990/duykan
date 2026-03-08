@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กำลังรับชม - DUYDODEE</title>
+
+    <!-- External Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ========================================
+           CSS VARIABLES & RESET
+           ======================================== */
+        :root {
+            --bg-color: #141414;
+            --bg-secondary: #1f1f1f;
+            --bg-tertiary: #2a2a2a;
+            --primary-red: #e50914;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --text-dim: #666666;
+            --border: #333333;
+            --success: #46d369;
+            --warning: #f9a825;
+            --error: #e87c03;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           NAVIGATION COMPONENTS
+           ======================================== */
+        .navbar {
+            background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9) 0%, rgba(20, 20, 20, 0) 100%);
+            padding: 15px 50px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 18px;
+            margin-right: 20px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            color: var(--primary-red);
+            transform: translateX(-3px);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .nav-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           LOADING COMPONENTS
+           ======================================== */
+        .loading-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+        }
+
+        .loading-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtitle {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* ========================================
+           PLAYER CONTAINER
+           ======================================== */
+        .player-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 50px;
+        }
+
+        .player-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .video-wrapper {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-wrapper:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: #b20710;
+        }
+
+        .play-button i {
+            font-size: 32px;
+            margin-left: 8px;
+        }
+
+        /* ========================================
+           MOVIE INFO COMPONENTS
+           ======================================== */
+        .movie-info {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .movie-header {
+            margin-bottom: 25px;
+        }
+
+        .movie-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .movie-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .meta-item i {
+            color: var(--primary-red);
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rating-stars {
+            color: #f5c518;
+            font-size: 18px;
+        }
+
+        .rating-value {
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .movie-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-vip {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .badge-hd {
+            background: rgba(70, 211, 105, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(70, 211, 105, 0.3);
+        }
+
+        .badge-category {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .movie-description {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b20710;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* ========================================
+           COMMENTS SECTION
+           ======================================== */
+        .comments-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .comment-form {
+            margin-bottom: 30px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .comment-time {
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        .comment-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           ERROR COMPONENTS
+           ======================================== */
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+        }
+
+        .error-content {
+            text-align: center;
+            padding: 40px;
+            max-width: 500px;
+        }
+
+        .error-icon {
+            font-size: 64px;
+            color: var(--error);
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .player-main {
+                grid-template-columns: 1fr;
+            }
+
+            .player-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .player-container {
+                padding: 15px;
+            }
+
+            .movie-info {
+                padding: 20px;
+            }
+
+            .movie-title {
+                font-size: 22px;
+            }
+
+            .movie-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ========================================
+       NAVIGATION BAR
+       ======================================== -->
+    <nav class="navbar">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            กลับ
+        </a>
+        <a href="index.html" class="logo">DUY<span>DOO</span>DEE</a>
+        <div class="nav-actions">
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">G</div>
+                <span id="userName">Guest</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========================================
+       LOADING STATE
+       ======================================== -->
+    <div id="loadingContainer" class="loading-container">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">กำลังโหลดวิดีโอ...</div>
+            <div class="loading-subtitle">กรุณารอสักครู่</div>
+        </div>
+    </div>
+
+    <!-- ========================================
+       ERROR STATE
+       ======================================== -->
+    <div id="errorContainer" class="error-container" style="display: none;">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="error-title">ไม่พบวิดีโอ</h2>
+            <p class="error-message">วิดีโอที่คุณต้องการดูอาจถูกลบไปแล้ว หรือไม่มีในระบบ</p>
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home"></i> กลับหน้าหลัก
+            </a>
+        </div>
+    </div>
+
+    <!-- ========================================
+       PLAYER CONTENT
+       ======================================== -->
+    <div id="playerContainer" class="player-container" style="display: none;">
+        <div class="player-main">
+            <!-- Video Player -->
+            <div class="video-wrapper">
+                <iframe id="videoPlayer" class="video-player" src="" allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <div class="video-overlay">
+                    <div class="play-button" onclick="playVideo()">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movie Information -->
+            <div class="movie-info">
+                <div class="movie-header">
+                    <h1 class="movie-title" id="movieTitle">กำลังโหลด...</h1>
+
+                    <div class="movie-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="movieYear">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-eye"></i>
+                            <span id="movieViews">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="movieDuration">-</span>
+                        </div>
+                    </div>
+
+                    <div class="movie-rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="rating-value" id="movieRating">-</span>
+                    </div>
+
+                    <div class="movie-badges">
+                        <span class="badge badge-vip" id="vipBadge" style="display: none;">
+                            <i class="fas fa-crown"></i> VIP
+                        </span>
+                        <span class="badge badge-hd">
+                            <i class="fas fa-hd"></i> HD
+                        </span>
+                        <span class="badge badge-category" id="categoryBadge">
+                            ซีรีส์
+                        </span>
+                    </div>
+                </div>
+
+                <div class="movie-description" id="movieDescription">
+                    กำลังโหลดเรื่องย่อ...
+                </div>
+
+                <div class="movie-actions">
+                    <button class="btn btn-primary" onclick="playVideo()">
+                        <i class="fas fa-play"></i> เล่นวิดีโอ
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareMovie()">
+                        <i class="fas fa-share"></i> แชร์
+                    </button>
+                    <button class="btn btn-secondary" onclick="reportVideo()">
+                        <i class="fas fa-flag"></i> แจ้งปัญหา
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <div class="section-header">
+                <h2 class="section-title">ความคิดเห็น</h2>
+                <span id="commentsCount">0 ความคิดเห็น</span>
+            </div>
+
+            <div class="comment-form">
+                <textarea id="commentInput" class="comment-input" placeholder="เขียนความคิดเห็นของคุณ..."></textarea>
+                <button class="btn btn-primary" onclick="submitComment()">
+                    <i class="fas fa-paper-plane"></i> ส่งความคิดเห็น
+                </button>
+            </div>
+
+            <div class="comments-list" id="commentsList">
+                <!-- Comments will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+       JAVASCRIPT APPLICATION
+       ======================================== -->
+    <script type="module">
+        // Firebase SDK imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8WxpOMCE-mDjQ43HM9jvsOlI-30T-b6Q",
+            authDomain: "classic-e8ab7.firebaseapp.com",
+            projectId: "classic-e8ab7",
+            storageBucket: "classic-e8ab7.appspot.com",
+            messagingSenderId: "596308927760",
+            appId: "1:596308927760:web:a12be9b2dffb5bc72cb195"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // ========================================
+        // APPLICATION STATE
+        // ========================================
+        const AppState = {
+            currentMovie: null,
+            currentUser: null,
+            isLoading: true,
+            comments: []
+        };
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        const Utils = {
+            // Get URL parameters
+            getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            },
+
+            // Extract YouTube video ID from URL
+            extractYouTubeId(url) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : null;
+            },
+
+            // Convert YouTube URL to embed format
+            getEmbedUrl(youtubeUrl) {
+                if (!youtubeUrl) {
+                    console.warn('[WARN] YouTube URL is undefined or null');
+                    return '';
+                }
+
+                const videoId = this.extractYouTubeId(youtubeUrl);
+                return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&mute=1` : '';
+            },
+
+            // Format number with commas
+            formatNumber(num) {
+                return num ? num.toLocaleString('th-TH') : '0';
+            },
+
+            // Get category label
+            getCategoryLabel(category) {
+                const labels = {
+                    'series': 'ซีรีส์',
+                    'vertical': 'ซีรีส์สั้น',
+                    'movie': 'ภาพยนตร์',
+                    'anime': 'อนิเมะ'
+                };
+                return labels[category] || 'ซีรีส์';
+            },
+
+            // Show toast notification
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    background: ${type === 'error' ? 'var(--error)' : type === 'success' ? 'var(--success)' : '#2196f3'};
+                    color: white;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    z-index: 10000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+
+                setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        // ========================================
+        // API FUNCTIONS
+        // ========================================
+        const API = {
+            // Load movie from server
+            async loadMovie(movieId) {
+                try {
+                    console.log(`[DEBUG] Fetching movie with ID: ${movieId}`);
+                    const response = await fetch(`/api/movies?id=${movieId}`);
+                    const result = await response.json();
+
+                    console.log(`[DEBUG] API response:`, result);
+
+                    if (result.success && result.data) {
+                        console.log(`[DEBUG] Movie data found:`, result.data);
+                        return result.data;
+                    } else {
+                        console.error(`[ERROR] API returned error:`, result.message);
+                        throw new Error(result.message || 'Movie not found');
+                    }
+                } catch (error) {
+                    console.error('[ERROR] Error loading movie:', error);
+                    return null;
+                }
+            },
+
+            // Load comments
+            async loadComments(movieId) {
+                try {
+                    const response = await fetch(`/api/comments?movieId=${movieId}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        return result.comments || [];
+                    }
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                }
+                return [];
+            },
+
+            // Submit comment
+            async submitComment(movieId, text) {
+                try {
+                    const response = await fetch('/api/comments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            movieId,
+                            text,
+                            author: AppState.currentUser?.displayName || 'Anonymous'
+                        })
+                    });
+
+                    const result = await response.json();
+                    return result.success;
+                } catch (error) {
+                    console.error('Error submitting comment:', error);
+                    return false;
+                }
+            }
+        };
+
+        // ========================================
+        // UI FUNCTIONS
+        // ========================================
+        const UI = {
+            // Show loading state
+            showLoading() {
+                document.getElementById('loadingContainer').style.display = 'flex';
+                document.getElementById('errorContainer').style.display = 'none';
+                document.getElementById('playerContainer').style.display = 'none';
+            },
+
+            // Show error state
+            showError() {
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('errorContainer').style.display = 'flex';
+                document.getElementById('playerContainer').style.display = 'none';
+            },
+
+            // Show player content
+            showPlayer() {
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('errorContainer').style.display = 'none';
+                document.getElementById('playerContainer').style.display = 'block';
+            },
+
+            // Update movie information
+            updateMovieInfo(movie) {
+                document.getElementById('movieTitle').textContent = movie.title;
+                document.getElementById('movieYear').textContent = movie.year || 'ไม่ระบุ';
+                document.getElementById('movieViews').textContent = Utils.formatNumber(movie.viewCount) + ' ครั้ง';
+                document.getElementById('movieRating').textContent = movie.rating || 'N/A';
+                document.getElementById('movieDescription').textContent = movie.description || 'ไม่มีเรื่องย่อ';
+                document.getElementById('categoryBadge').textContent = Utils.getCategoryLabel(movie.category);
+
+                // VIP badge
+                const vipBadge = document.getElementById('vipBadge');
+                if (movie.isVip) {
+                    vipBadge.style.display = 'inline-flex';
+                } else {
+                    vipBadge.style.display = 'none';
+                }
+
+                // Update page title
+                document.title = `ดู ${movie.title} - DUYDODEE`;
+            },
+
+            // Update video player
+            updateVideoPlayer(movie) {
+                if (!movie || !movie.youtube) {
+                    console.warn('[WARN] Movie or YouTube URL is undefined');
+                    return;
+                }
+
+                const embedUrl = Utils.getEmbedUrl(movie.youtube);
+                if (embedUrl) {
+                    document.getElementById('videoPlayer').src = embedUrl;
+                } else {
+                    console.warn('[WARN] Could not generate embed URL for:', movie.youtube);
+                }
+            },
+
+            // Update user info
+            updateUserInfo(user) {
+                const userAvatar = document.getElementById('userAvatar');
+                const userName = document.getElementById('userName');
+
+                if (user) {
+                    userName.textContent = user.displayName || user.email || 'User';
+                    userAvatar.textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+                } else {
+                    userName.textContent = 'Guest';
+                    userAvatar.textContent = 'G';
+                }
+            },
+
+            // Render comments
+            renderComments(comments) {
+                const commentsList = document.getElementById('commentsList');
+                const commentsCount = document.getElementById('commentsCount');
+
+                commentsCount.textContent = `${comments.length} ความคิดเห็น`;
+
+                if (comments.length === 0) {
+                    commentsList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 40px;">ยังไม่มีความคิดเห็น</div>';
+                    return;
+                }
+
+                commentsList.innerHTML = comments.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <span class="comment-time">${new Date(comment.createdAt).toLocaleDateString('th-TH')}</span>
+                        </div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
+                `).join('');
+            }
+        };
+
+        // ========================================
+        // PLAYER FUNCTIONS
+        // ========================================
+        const Player = {
+            // Play video
+            play() {
+                const iframe = document.getElementById('videoPlayer');
+                const currentSrc = iframe.src;
+                iframe.src = currentSrc.replace('autoplay=0', 'autoplay=1');
+                Utils.showToast('กำลังเล่นวิดีโอ', 'success');
+            },
+
+            // Share movie
+            share() {
+                const url = window.location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: AppState.currentMovie.title,
+                        text: `ดู ${AppState.currentMovie.title} ที่ DUYDODEE`,
+                        url: url
+                    });
+                } else {
+                    navigator.clipboard.writeText(url);
+                    Utils.showToast('คัดลอกลิงก์แล้ว', 'success');
+                }
+            },
+
+            // Report video
+            report() {
+                const message = `
+แจ้งปัญหาวิดีโอ: ${AppState.currentMovie.title}
+ลิงก์: ${window.location.href}
+ปัญหา: [กรุณาระบุปัญหา]
+                `;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'แจ้งปัญหาวิดีโอ',
+                        text: message.trim()
+                    });
+                } else {
+                    navigator.clipboard.writeText(message.trim());
+                    Utils.showToast('คัดลอกข้อความแจ้งปัญหาแล้ว', 'info');
+                }
+            },
+
+            // Submit comment
+            async submit() {
+                const input = document.getElementById('commentInput');
+                const text = input.value.trim();
+
+                if (!text) {
+                    Utils.showToast('กรุณาเขียนความคิดเห็น', 'error');
+                    return;
+                }
+
+                if (!AppState.currentUser) {
+                    Utils.showToast('กรุณาเข้าสู่ระบบก่อน', 'error');
+                    return;
+                }
+
+                const success = await API.submitComment(AppState.currentMovie.id, text);
+
+                if (success) {
+                    input.value = '';
+                    Utils.showToast('ส่งความคิดเห็นสำเร็จ', 'success');
+                    // Reload comments
+                    await this.load();
+                } else {
+                    Utils.showToast('ส่งความคิดเห็นไม่สำเร็จ', 'error');
+                }
+            },
+
+            // Load comments
+            async load() {
+                const comments = await API.loadComments(AppState.currentMovie.id);
+                AppState.comments = comments;
+                UI.renderComments(comments);
+            }
+        };
+
+        // ========================================
+        // COMMENTS SYSTEM
+        // ========================================
+        const Comments = {
+            // Load comments
+            async load() {
+                if (!AppState.currentMovie || !AppState.currentMovie.id) {
+                    console.warn('[WARN] No current movie or movie ID available for loading comments');
+                    return;
+                }
+
+                const comments = await API.loadComments(AppState.currentMovie.id);
+                AppState.comments = comments;
+                UI.renderComments(comments);
+            }
+        };
+
+        // ========================================
+        // APPLICATION INITIALIZATION
+        // ========================================
+        async function initApp() {
+            UI.showLoading();
+
+            try {
+                // Get movie ID from URL
+                const movieId = Utils.getUrlParam('id');
+
+                if (!movieId) {
+                    UI.showError();
+                    console.error('[ERROR] No movie ID found in URL');
+                    return;
+                }
+
+                console.log(`[INFO] Loading movie with ID: ${movieId}`);
+
+                // Load movie data
+                const movie = await API.loadMovie(movieId);
+
+                if (!movie) {
+                    UI.showError();
+                    console.error('[ERROR] Failed to load movie data');
+                    return;
+                }
+
+                console.log(`[INFO] Movie loaded: ${movie.title}`);
+
+                AppState.currentMovie = movie;
+
+                // Update UI
+                UI.updateMovieInfo(movie);
+                UI.updateVideoPlayer(movie);
+                UI.showPlayer();
+
+                // Load comments
+                await Comments.load();
+
+                console.log('[INFO] Watch page initialized successfully');
+            } catch (error) {
+                console.error('[ERROR] Error initializing watch page:', error);
+                UI.showError();
+            }
+        }
+
+        // ========================================
+        // AUTHENTICATION STATE
+        // ========================================
+        auth.onAuthStateChanged((user) => {
+            AppState.currentUser = user;
+            UI.updateUserInfo(user);
+        });
+
+        // ========================================
+        // GLOBAL FUNCTIONS
+        // ========================================
+        window.playVideo = () => Player.play();
+        window.shareMovie = () => Player.share();
+        window.reportVideo = () => Player.report();
+        window.submitComment = () => Player.submit();
+
+        // ========================================
+        // APPLICATION STARTUP
+        // ========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+    </script>
+</body>
+
+</html>

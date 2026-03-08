@@ -1,0 +1,47 @@
+{
+  "name": "duydodee-streaming",
+  "version": "2.0.0",
+  "description": "DUYDODEE Streaming Platform - ดูซีรีส์ออนไลน์ฟรี",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "npm run build:client",
+    "build:client": "echo 'Build process not implemented yet'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ --ext .js",
+    "lint:fix": "eslint src/ --ext .js --fix",
+    "format": "prettier --write src/",
+    "clean": "rimraf public/ node_modules/",
+    "logs": "if not exist logs mkdir logs",
+    "prestart": "npm run logs"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "streaming",
+    "series",
+    "firebase",
+    "thai",
+    "nodejs",
+    "express",
+    "javascript"
+  ],
+  "author": "DUYDOO-DEE",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
