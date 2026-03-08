@@ -6,17 +6,16 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // =================================================================================
-// IMPORTANT: REPLACE WITH YOUR FIREBASE PROJECT CONFIGURATION
+// Firebase Project Configuration
 // =================================================================================
-// Go to your Firebase project settings, find the "SDK setup and configuration" 
-// section, and copy the configuration object here.
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBsNc3ICL86f2WE-kNghRqAiNgBR4FeiLU",
+  authDomain: "classic-e8ab7.firebaseapp.com",
+  projectId: "classic-e8ab7",
+  storageBucket: "classic-e8ab7.firebasestorage.app",
+  messagingSenderId: "596308927760",
+  appId: "1:596308927760:web:a12be9b2dffb5bc72cb195",
+  measurementId: "G-PC2891EP7Z"
 };
 // =================================================================================
 
