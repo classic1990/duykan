@@ -6,305 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แอดมิน - DUYDODEE</title>
 
-    <!-- External Libraries -->
+    <!-- External Libraries & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <style>
-        /* ========================================
-           CSS VARIABLES & RESET
-           ======================================== */
-        :root {
-            --bg-color: #141414;
-            --bg-secondary: #1f1f1f;
-            --bg-tertiary: #2a2a2a;
-            --primary-red: #e50914;
-            --text-main: #ffffff;
-            --text-muted: #aaaaaa;
-            --text-dim: #666666;
-            --border: #333333;
-            --success: #46d369;
-            --warning: #f9a825;
-            --error: #e87c03;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* ========================================
-           NAVIGATION COMPONENTS
-           ======================================== */
-        .navbar {
-            background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9) 0%, rgba(20, 20, 20, 0) 100%);
-            padding: 15px 50px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar.scrolled {
-            background: rgba(20, 20, 20, 0.95);
-        }
-
-        .navbar-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary-red);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .logo:hover {
-            opacity: 0.8;
-        }
-
-        .logo span {
-            color: white;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: var(--primary-red);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 15px;
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .user-menu:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .user-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--primary-red);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .user-name {
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        /* ========================================
-           MAIN CONTAINER
-           ======================================== */
-        .main-container {
-            padding-top: 80px;
-            min-height: 100vh;
-        }
-
-        .admin-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .admin-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .admin-title {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary-red);
-            margin-bottom: 10px;
-        }
-
-        .admin-subtitle {
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .admin-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-        }
-
-        .admin-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary-red);
-        }
-
-        .card-icon {
-            font-size: 48px;
-            color: var(--primary-red);
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .card-description {
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Prompt', sans-serif;
-        }
-
-        .btn-primary {
-            background: var(--primary-red);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #b20710;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-main);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-secondary);
-            border-color: var(--primary-red);
-        }
-
-        /* ========================================
-           FOOTER
-           ======================================== */
-        .footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            padding: 20px;
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 40px;
-        }
-
-        /* ========================================
-           RESPONSIVE DESIGN
-           ======================================== */
-        @media (max-width: 1024px) {
-            .navbar-content {
-                padding: 15px 30px;
-            }
-
-            .admin-content {
-                padding: 30px 20px;
-            }
-
-            .admin-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 20px;
-            }
-
-            .nav-actions {
-                gap: 10px;
-            }
-
-            .back-btn span {
-                display: none;
-            }
-
-            .admin-title {
-                font-size: 28px;
-            }
-
-            .admin-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .admin-card {
-                padding: 20px;
-            }
-        }
-    </style>
+    <!-- Local Stylesheet -->
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 
 <body>
@@ -314,13 +25,11 @@
     <nav class="navbar" id="navbar">
         <div class="navbar-content">
             <a href="/index.html" class="logo">DUY<span>DOO</span>DEE</a>
-
             <div class="nav-actions">
                 <a href="/index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i>
                     <span>กลับหน้าแรก</span>
                 </a>
-
                 <div class="user-menu" id="userMenu">
                     <div class="user-avatar" id="userAvatar">G</div>
                     <span class="user-name" id="userName">Guest</span>
@@ -332,61 +41,51 @@
     <!-- ========================================
        MAIN CONTAINER
        ======================================== -->
-    <div class="main-container">
-        <div class="admin-content">
-            <div class="admin-header">
-                <h1 class="admin-title">🔐 แอดมิน DUYDODEE</h1>
+    <main class="main-container">
+        <section class="admin-content" aria-labelledby="admin-main-title">
+            <header class="admin-header">
+                <h1 id="admin-main-title" class="admin-title">🔐 แอดมิน DUYDODEE</h1>
                 <p class="admin-subtitle">จัดการซีรีส์และข้อมูลผู้ใช้งานระบบ</p>
-            </div>
+            </header>
 
             <div class="admin-grid">
-                <!-- Movie Management -->
-                <a href="/admin-dashboard" class="admin-card">
-                    <div class="card-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
+                <!-- Dashboard -->
+                <a href="admin-dashboard.html" class="admin-card" aria-label="ไปที่หน้าแดชบอดแอดมิน">
+                    <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
                     <h3 class="card-title">แดชบอดแอดมิน</h3>
                     <p class="card-description">จัดการหนังและซีรีส์อย่างมืออาชีพ</p>
                 </a>
 
                 <!-- AI YouTube Processor -->
-                <a href="/admin-ai-processor" class="admin-card">
-                    <div class="card-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
+                <a href="admin-ai-processor.html" class="admin-card" aria-label="ไปที่หน้า AI YouTube Processor">
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
                     <h3 class="card-title">AI YouTube Processor</h3>
-                    <p class="card-description">ดึงข้อมูลจาก YouTube และบันทึกลง Firestore อัตโนมัติ</p>
+                    <p class="card-description">ดึงข้อมูลจาก YouTube และบันทึกลงฐานข้อมูลอัตโนมัติ</p>
                 </a>
 
                 <!-- User Management -->
-                <a href="/admin-ai-processor" class="admin-card">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                <a href="#" class="admin-card" aria-label="ไปที่หน้าจัดการผู้ใช้">
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
                     <h3 class="card-title">จัดการผู้ใช้</h3>
-                    <p class="card-description">ดูข้อมูลผู้ใช้ รายงานปัญหา และสถิติ</p>
+                    <p class="card-description">ดูข้อมูลผู้ใช้, จัดการสิทธิ์ และตรวจสอบรายงาน</p>
+                </a>
+                
+                <!-- Reports -->
+                <a href="/admin/admin-reports.html" class="admin-card" aria-label="ไปที่หน้ารายงานและสถิติ">
+                    <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3 class="card-title">รายงานและสถิติ</h3>
+                    <p class="card-description">ดูสถิติการใช้งาน, จำนวนซีรีส์, และข้อมูลผู้ใช้</p>
                 </a>
 
-                <!-- Statistics -->
-                <div class="admin-card">
-                    <div class="card-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3 class="card-title">สถิติ</h3>
-                    <p class="card-description">ดูสถิติการใช้งาน จำนวนซีรีส์ และผู้ใช้</p>
-                </div>
-
                 <!-- Settings -->
-                <div class="admin-card">
-                    <div class="card-icon">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                    <h3 class="card-title">ตั้งค่า</h3>
-                    <p class="card-description">ตั้งค่าระบบ และการจัดการอื่นๆ</p>
-                </div>
+                <a href="#" class="admin-card" aria-label="ไปที่หน้าตั้งค่าระบบ">
+                    <div class="card-icon"><i class="fas fa-cog"></i></div>
+                    <h3 class="card-title">ตั้งค่าระบบ</h3>
+                    <p class="card-description">ตั้งค่าทั่วไป, จัดการ API Keys, และการตั้งค่าอื่นๆ</p>
+                </a>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- ========================================
        FOOTER
@@ -398,168 +97,6 @@
     <!-- ========================================
        JAVASCRIPT APPLICATION
        ======================================== -->
-    <script type="module">
-        // Firebase SDK imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // Use Firebase config from firebase-init.js
-        const firebaseConfig = {
-            apiKey: process.env.FIREBASE_API_KEY || "your-api-key-here",
-            authDomain: process.env.FIREBASE_AUTH_DOMAIN || "your-project.firebaseapp.com",
-            projectId: process.env.FIREBASE_PROJECT_ID || "your-project-id",
-            storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "your-project.appspot.com",
-            messagingSenderId: "596308927760",
-            appId: "1:596308927760:web:a12be9b2dffb5bc72cb195"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // ========================================
-        // UTILITY FUNCTIONS
-        // ========================================
-        const Utils = {
-            showToast(message, type = 'info') {
-                const toast = document.createElement('div');
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 80px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    background: ${type === 'error' ? 'var(--error)' : type === 'success' ? 'var(--success)' : '#2196f3'};
-                    color: white;
-                    border-radius: 8px;
-                    font-weight: 500;
-                    z-index: 10000;
-                    transform: translateX(100%);
-                    transition: transform 0.3s ease;
-                `;
-                toast.textContent = message;
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.style.transform = 'translateX(0)', 100);
-                setTimeout(() => {
-                    toast.style.transform = 'translateX(100%)';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            }
-        };
-
-        // ========================================
-        // UI FUNCTIONS
-        // ========================================
-        const UI = {
-            updateUserInfo(user) {
-                const userAvatar = document.getElementById('userAvatar');
-                const userName = document.getElementById('userName');
-
-                if (user) {
-                    userName.textContent = user.displayName || user.email || 'User';
-                    userAvatar.textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-                } else {
-                    userName.textContent = 'Guest';
-                    userAvatar.textContent = 'G';
-                }
-            }
-        };
-
-        // ========================================
-        // GLOBAL FUNCTIONS
-        // ========================================
-        window.checkAdminAccess = () => {
-            const user = auth.currentUser;
-            if (!user) {
-                Utils.showToast('กรุณาเข้าสู่ระบบก่อนเข้าใช้งานแอดมิน', 'error');
-                setTimeout(() => {
-                    window.location.href = '/index.html';
-                }, 2000);
-                return false;
-            }
-
-            if (user.email !== 'duy.kan1234@gmail.com') {
-                Utils.showToast('คุณไม่มีสิทธิ์เข้าถึงหน้าแอดมิน', 'error');
-                setTimeout(() => {
-                    window.location.href = '/index.html';
-                }, 2000);
-                return false;
-            }
-
-            return true;
-        };
-
-        // ========================================
-        // SCROLL HANDLING
-        // ========================================
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // ========================================
-        // AUTHENTICATION STATE
-        // ========================================
-
-        // Mock authentication for testing
-        const mockAuth = {
-            currentUser: null,
-            signIn: async () => {
-                try {
-                    const response = await fetch('/api/auth/google', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    const result = await response.json();
-
-                    if (result.success) {
-                        mockAuth.currentUser = result.data;
-                        UI.updateUserInfo(result.data);
-                        Utils.showToast('เข้าสู่ระบบสำเร็จ', 'success');
-                        return true;
-                    }
-                } catch (error) {
-                    console.error('Login error:', error);
-                    Utils.showToast('เกิดข้อผิดพลาดในการเข้าสู่ระบบ', 'error');
-                    return false;
-                }
-            },
-            signOut: () => {
-                mockAuth.currentUser = null;
-                UI.updateUserInfo(null);
-                Utils.showToast('ออกจากระบบแล้ว', 'info');
-                window.location.href = '/index.html';
-            }
-        };
-
-        // Replace auth with mock auth
-        auth = mockAuth;
-
-        onAuthStateChanged(auth, (user) => {
-            UI.updateUserInfo(user);
-        });
-
-        // ========================================
-        // APPLICATION STARTUP
-        // ========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Auto-login for testing
-            mockAuth.signIn();
-
-            setTimeout(() => {
-                if (!window.checkAdminAccess()) {
-                    return;
-                }
-                Utils.showToast('ยินดีต้อนรับสู่หน้าแอดมิน DUYDODEE', 'success');
-            }, 1000);
-        });
-    </script>
+    <script type="module" src="/js/admin.js"></script>
 </body>
-
 </html>

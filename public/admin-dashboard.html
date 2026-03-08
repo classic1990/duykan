@@ -6,888 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แดชบอดแอดมิน - DUYDODEE</title>
 
-    <!-- External Libraries -->
+    <!-- External Libraries & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* ========================================
-           CSS VARIABLES & RESET
-           ======================================== */
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #252525;
-            --bg-card: #1e1e1e;
-            --accent: #e50914;
-            --accent-hover: #f40612;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --text-muted: #808080;
-            --border: #333333;
-            --success: #46d369;
-            --warning: #f9a825;
-            --error: #e87c03;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Prompt', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        /* ========================================
-           SIDEBAR NAVIGATION
-           ======================================== */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .sidebar-header {
-            padding: 30px 25px;
-            border-bottom: 1px solid var(--border);
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .sidebar-logo i {
-            font-size: 2rem;
-        }
-
-        .sidebar-user {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .user-details h4 {
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-            color: var(--text-primary);
-        }
-
-        .user-details p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-
-        .nav-section {
-            margin-bottom: 25px;
-            padding: 0 20px;
-        }
-
-        .nav-section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 20px;
-            margin: 5px 0;
-            border-radius: 10px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            transform: translateX(5px);
-        }
-
-        .nav-item.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .nav-item i {
-            width: 20px;
-            text-align: center;
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: var(--accent);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        /* ========================================
-           MAIN CONTENT AREA
-           ======================================== */
-        .main-content {
-            margin-left: 280px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .top-header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-box {
-            position: relative;
-            width: 400px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 45px 12px 20px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header-btn {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: 8px;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .header-btn.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .header-btn.primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        /* ========================================
-           DASHBOARD CONTENT
-           ======================================== */
-        .dashboard-content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .page-header {
-            margin-bottom: 30px;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        /* ========================================
-           STATS CARDS
-           ======================================== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .stat-icon.movies {
-            background: rgba(229, 9, 20, 0.1);
-            color: var(--accent);
-        }
-
-        .stat-icon.views {
-            background: rgba(70, 211, 105, 0.1);
-            color: var(--success);
-        }
-
-        .stat-icon.users {
-            background: rgba(249, 168, 37, 0.1);
-            color: var(--warning);
-        }
-
-        .stat-icon.revenue {
-            background: rgba(232, 124, 3, 0.1);
-            color: var(--error);
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .stat-change {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .stat-change.positive {
-            background: rgba(70, 211, 105, 0.1);
-            color: var(--success);
-        }
-
-        .stat-change.negative {
-            background: rgba(232, 124, 3, 0.1);
-            color: var(--error);
-        }
-
-        /* ========================================
-           MOVIES TABLE
-           ======================================== */
-        .content-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .filter-btn {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .movies-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .movies-table th {
-            background: var(--bg-tertiary);
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .movies-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .movies-table tr:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .movie-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .movie-poster {
-            width: 60px;
-            height: 90px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: var(--bg-tertiary);
-        }
-
-        .movie-details h4 {
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 0.95rem;
-        }
-
-        .movie-details p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .action-btn.edit:hover {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        .action-btn.delete:hover {
-            background: var(--error);
-            border-color: var(--error);
-        }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-badge.active {
-            background: rgba(70, 211, 105, 0.1);
-            color: var(--success);
-        }
-
-        .status-badge.inactive {
-            background: rgba(232, 124, 3, 0.1);
-            color: var(--error);
-        }
-
-        /* ========================================
-           MODAL
-           ======================================== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .modal-close {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: var(--error);
-            border-color: var(--error);
-            color: white;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 12px 15px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-            margin-top: 25px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-secondary);
-        }
-
-        /* ========================================
-           AI PROCESSOR STYLES
-           ======================================== */
-        .ai-processor-container {
-            padding: 20px 0;
-        }
-
-        .ai-input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .input-with-button,
-        .textarea-with-button {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .input-with-button .form-input {
-            flex: 1;
-        }
-
-        .textarea-with-button .form-textarea {
-            flex: 1;
-        }
-
-        .ai-results {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .ai-results h3 {
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .result-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .result-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .result-item.success {
-            border-left: 4px solid var(--success);
-        }
-
-        .result-item.error {
-            border-left: 4px solid var(--error);
-        }
-
-        .result-title {
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .result-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .result-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .result-status.success {
-            background: rgba(70, 211, 105, 0.1);
-            color: var(--success);
-        }
-
-        .result-status.error {
-            background: rgba(232, 124, 3, 0.1);
-            color: var(--error);
-        }
-
-        .result-details {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border);
-        }
-
-        .result-details p {
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .result-details strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .result-error {
-            background: rgba(232, 124, 3, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .result-error p {
-            color: var(--error);
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        /* ========================================
-           RESPONSIVE DESIGN
-           ======================================== */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 250px;
-            }
-
-            .main-content {
-                margin-left: 250px;
-            }
-
-            .search-box {
-                width: 300px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .header-right {
-                display: none;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .movies-table {
-                font-size: 0.8rem;
-            }
-
-            .movie-poster {
-                width: 40px;
-                height: 60px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Local Stylesheet -->
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
 </head>
 
 <body>
@@ -897,36 +25,36 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <a href="/index.html" class="sidebar-logo">
-                <i class="fas fa-play"></i>
+                <i class="fas fa-play-circle"></i>
                 <span>DUYDODEE</span>
             </a>
         </div>
 
         <div class="sidebar-user">
             <div class="user-info">
-                <div class="user-avatar">A</div>
+                <div id="userAvatar" class="user-avatar">A</div>
                 <div class="user-details">
-                    <h4>Admin User</h4>
-                    <p>duy.kan1234@gmail.com</p>
+                    <h4 id="userName">Admin User</h4>
+                    <p id="userEmail">duy.kan1234@gmail.com</p>
                 </div>
             </div>
         </div>
 
         <nav class="sidebar-nav">
             <div class="nav-section">
-                <div class="nav-section-title">หลัก</div>
+                <h3 class="nav-section-title">หลัก</h3>
                 <a href="/admin-dashboard.html" class="nav-item active">
                     <i class="fas fa-th-large"></i>
                     <span>แดชบอด</span>
                 </a>
-                <a href="/admin-ai-processor" class="nav-item">
+                <a href="admin-ai-processor.html" class="nav-item">
                     <i class="fas fa-robot"></i>
                     <span>AI Processor</span>
                 </a>
             </div>
 
             <div class="nav-section">
-                <div class="nav-section-title">จัดการ</div>
+                <h3 class="nav-section-title">จัดการ</h3>
                 <a href="#" class="nav-item">
                     <i class="fas fa-film"></i>
                     <span>หนัง</span>
@@ -945,8 +73,8 @@
             </div>
 
             <div class="nav-section">
-                <div class="nav-section-title">รายงาน</div>
-                <a href="#" class="nav-item">
+                <h3 class="nav-section-title">รายงาน</h3>
+                <a href="/admin/admin-reports.html" class="nav-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>สถิติ</span>
                 </a>
@@ -957,7 +85,7 @@
             </div>
 
             <div class="nav-section">
-                <div class="nav-section-title">ตั้งค่า</div>
+                <h3 class="nav-section-title">ตั้งค่า</h3>
                 <a href="#" class="nav-item">
                     <i class="fas fa-cog"></i>
                     <span>การตั้งค่า</span>
@@ -976,112 +104,75 @@
     <main class="main-content">
         <header class="top-header">
             <div class="header-left">
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="ค้นหาหนัง, ซีรีส์, ผู้ใช้...">
+                <div class="search-box" role="search">
+                    <input type="search" class="search-input" placeholder="ค้นหาหนัง, ซีรีส์, ผู้ใช้...">
                     <i class="fas fa-search search-icon"></i>
                 </div>
             </div>
 
             <div class="header-right">
-                <a href="/admin-ai-processor" class="header-btn">
+                <a href="admin-ai-processor.html" class="header-btn">
                     <i class="fas fa-robot"></i>
                     <span>AI Processor</span>
                 </a>
-                <button class="header-btn primary" onclick="openAddMovieModal()">
+                <button id="addMovieBtn" class="header-btn primary">
                     <i class="fas fa-plus"></i>
                     <span>เพิ่มหนัง</span>
                 </button>
             </div>
         </header>
 
-        <!-- ========================================
-           DASHBOARD CONTENT
-           ======================================== -->
         <div class="dashboard-content">
-            <div class="page-header">
+            <header class="page-header">
                 <h1 class="page-title">แดชบอดแอดมิน</h1>
                 <p class="page-subtitle">จัดการและตรวจสอบข้อมูลหนังและซีรีส์ทั้งหมด</p>
-            </div>
+            </header>
 
-            <!-- ========================================
-               STATS CARDS
-               ======================================== -->
-            <div class="stats-grid">
+            <!-- STATS CARDS SECTION -->
+            <section class="stats-grid" aria-label="สถิติภาพรวม">
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-icon movies">
-                            <i class="fas fa-film"></i>
-                        </div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>12%</span>
-                        </div>
+                        <div class="stat-icon movies"><i class="fas fa-film"></i></div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>12%</span></div>
                     </div>
                     <div class="stat-value">1,247</div>
                     <div class="stat-label">หนังทั้งหมด</div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-icon views">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>8%</span>
-                        </div>
+                        <div class="stat-icon views"><i class="fas fa-eye"></i></div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>8%</span></div>
                     </div>
                     <div class="stat-value">45.2k</div>
                     <div class="stat-label">การรับชมวันนี้</div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-icon users">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>15%</span>
-                        </div>
+                        <div class="stat-icon users"><i class="fas fa-users"></i></div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>15%</span></div>
                     </div>
                     <div class="stat-value">2,341</div>
                     <div class="stat-label">ผู้ใช้ทั้งหมด</div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-icon revenue">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="stat-change negative">
-                            <i class="fas fa-arrow-down"></i>
-                            <span>3%</span>
-                        </div>
+                        <div class="stat-icon revenue"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-change negative"><i class="fas fa-arrow-down"></i><span>3%</span></div>
                     </div>
                     <div class="stat-value">87.3%</div>
                     <div class="stat-label">อัตราการใช้งาน</div>
                 </div>
-            </div>
+            </section>
 
-            <!-- ========================================
-               MOVIES TABLE
-               ======================================== -->
-            <div class="content-card">
-                <div class="card-header">
-                    <h2 class="card-title">หนังล่าสุด</h2>
+            <!-- MOVIES TABLE SECTION -->
+            <section class="content-card" aria-labelledby="movies-table-title">
+                <header class="card-header">
+                    <h2 id="movies-table-title" class="card-title">หนังล่าสุด</h2>
                     <div class="card-actions">
-                        <button class="filter-btn">
-                            <i class="fas fa-filter"></i>
-                            <span>กรอง</span>
-                        </button>
-                        <button class="filter-btn">
-                            <i class="fas fa-sort"></i>
-                            <span>เรียง</span>
-                        </button>
+                        <button class="filter-btn"><i class="fas fa-filter"></i><span>กรอง</span></button>
+                        <button class="filter-btn"><i class="fas fa-sort"></i><span>เรียง</span></button>
                     </div>
-                </div>
-
+                </header>
                 <table class="movies-table">
                     <thead>
                         <tr>
@@ -1094,97 +185,79 @@
                         </tr>
                     </thead>
                     <tbody id="moviesTableBody">
-                        <!-- Movies will be loaded here -->
+                        <!-- Movies will be loaded here by JavaScript -->
                     </tbody>
                 </table>
-            </div>
+            </section>
 
-            <!-- ========================================
-               AI PROCESSOR SECTION
-               ======================================== -->
-            <div class="content-card">
-                <div class="card-header">
-                    <h2 class="card-title">AI YouTube Processor</h2>
+            <!-- AI PROCESSOR SECTION -->
+            <section class="content-card" aria-labelledby="ai-processor-title">
+                <header class="card-header">
+                    <h2 id="ai-processor-title" class="card-title">AI YouTube Processor</h2>
                     <div class="card-actions">
-                        <button class="filter-btn" onclick="toggleAIProcessor()">
+                        <button id="toggleAIProcessorBtn" class="filter-btn" aria-label="เปิด/ปิด AI Processor">
                             <i class="fas fa-robot"></i>
                             <span>เปิด/ปิด</span>
                         </button>
                     </div>
-                </div>
-
+                </header>
                 <div id="aiProcessorSection" style="display: none;">
                     <div class="ai-processor-container">
                         <div class="ai-input-section">
                             <div class="input-group">
-                                <label class="form-label">ประมวลผล YouTube URL เดี่ยว</label>
+                                <label for="youtubeUrl" class="form-label">ประมวลผล YouTube URL เดี่ยว</label>
                                 <div class="input-with-button">
-                                    <input type="url" id="youtubeUrl" class="form-input"
-                                        placeholder="https://www.youtube.com/watch?v=...">
-                                    <button class="btn btn-primary" onclick="processSingle()">
-                                        <i class="fas fa-play"></i>
-                                        <span>Process</span>
-                                    </button>
+                                    <input type="url" id="youtubeUrl" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+                                    <button id="processSingleBtn" class="btn btn-primary"><i class="fas fa-play"></i><span>Process</span></button>
                                 </div>
                             </div>
-
                             <div class="input-group">
-                                <label class="form-label">ประมวลผลหลาย URL (คั่นด้วยบรรทัด)</label>
+                                <label for="youtubeUrls" class="form-label">ประมวลผลหลาย URL (คั่นด้วยบรรทัด)</label>
                                 <div class="textarea-with-button">
-                                    <textarea id="youtubeUrls" class="form-textarea"
-                                        placeholder="https://www.youtube.com/watch?v=...&#10;https://www.youtube.com/watch?v=...&#10;https://www.youtube.com/watch?v=..."
-                                        rows="4"></textarea>
-                                    <button class="btn btn-primary" onclick="processBatch()">
-                                        <i class="fas fa-rocket"></i>
-                                        <span>Process Batch</span>
-                                    </button>
+                                    <textarea id="youtubeUrls" class="form-textarea" placeholder="https://www.youtube.com/watch?v=...&#10;https://www.youtube.com/watch?v=..." rows="4"></textarea>
+                                    <button id="processBatchBtn" class="btn btn-primary"><i class="fas fa-rocket"></i><span>Process Batch</span></button>
                                 </div>
                             </div>
                         </div>
-
                         <div id="aiResults" class="ai-results" style="display: none;">
                             <h3>ผลลัพธ์การประมวลผล</h3>
                             <div id="resultsGrid" class="results-grid">
-                                <!-- Results will be loaded here -->
+                                <!-- Results will be loaded here by JavaScript -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
     <!-- ========================================
        ADD/EDIT MOVIE MODAL
        ======================================== -->
-    <div id="movieModal" class="modal">
+    <div id="movieModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">เพิ่มหนังใหม่</h3>
-                <button class="modal-close" onclick="closeModal()">
+            <header class="modal-header">
+                <h3 id="modalTitle" class="modal-title">เพิ่มหนังใหม่</h3>
+                <button id="closeModalBtn" class="modal-close" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
-            </div>
-
-            <form id="movieForm">
+            </header>
+            <form id="movieForm" novalidate>
                 <div class="form-group">
-                    <label class="form-label">ชื่อหนัง</label>
-                    <input type="text" class="form-input" id="movieTitle" required>
+                    <label for="movieTitle" class="form-label">ชื่อหนัง</label>
+                    <input type="text" id="movieTitle" class="form-input" required>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">คำอธิบาย</label>
-                    <textarea class="form-textarea" id="movieDescription" required></textarea>
+                    <label for="movieDescription" class="form-label">คำอธิบาย</label>
+                    <textarea id="movieDescription" class="form-textarea" required></textarea>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">ปีที่ออก</label>
-                    <input type="number" class="form-input" id="movieYear" required>
+                    <label for="movieYear" class="form-label">ปีที่ออก</label>
+                    <input type="number" id="movieYear" class="form-input" required>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">หมวดหมู่</label>
-                    <select class="form-select" id="movieCategory" required>
+                    <label for="movieCategory" class="form-label">หมวดหมู่</label>
+                    <select id="movieCategory" class="form-select" required>
                         <option value="">เลือกหมวดหมู่</option>
                         <option value="movie">ภาพยนตร์</option>
                         <option value="series">ซีรีส์</option>
@@ -1192,534 +265,30 @@
                         <option value="documentary">สารคดี</option>
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">URL รูปภาพ</label>
-                    <input type="url" class="form-input" id="moviePoster" required>
+                    <label for="moviePoster" class="form-label">URL รูปภาพ</label>
+                    <input type="url" id="moviePoster" class="form-input" required>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">YouTube URL</label>
-                    <input type="url" class="form-input" id="movieYoutube" required>
+                    <label for="movieYoutube" class="form-label">YouTube URL</label>
+                    <input type="url" id="movieYoutube" class="form-input" required>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">สถานะ</label>
-                    <select class="form-select" id="movieStatus" required>
+                    <label for="movieStatus" class="form-label">สถานะ</label>
+                    <select id="movieStatus" class="form-select" required>
                         <option value="active">ใช้งาน</option>
                         <option value="inactive">ไม่ใช้งาน</option>
                     </select>
                 </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
-                        <i class="fas fa-times"></i>
-                        <span>ยกเลิก</span>
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i>
-                        <span>บันทึก</span>
-                    </button>
-                </div>
+                <footer class="form-actions">
+                    <button id="cancelModalBtn" type="button" class="btn btn-secondary"><i class="fas fa-times"></i><span>ยกเลิก</span></button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i><span>บันทึก</span></button>
+                </footer>
             </form>
         </div>
     </div>
 
-    <!-- ========================================
-       JAVASCRIPT
-       ======================================== -->
-    <script>
-        // ========================================
-        // APPLICATION STATE
-        // ========================================
-        const AppState = {
-            movies: [],
-            filteredMovies: [],
-            currentMovie: null,
-            isLoading: false
-        };
-
-        // ========================================
-        // UTILITY FUNCTIONS
-        // ========================================
-        const Utils = {
-            showToast(message, type = 'info') {
-                // Create toast notification
-                const toast = document.createElement('div');
-                toast.className = `toast toast-${type}`;
-                toast.textContent = message;
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${type === 'success' ? '#46d369' : type === 'error' ? '#e87c03' : '#333'};
-                    color: white;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    z-index: 3000;
-                    animation: slideIn 0.3s ease;
-                `;
-
-                document.body.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            },
-
-            formatNumber(num) {
-                return new Intl.NumberFormat('th-TH').format(num);
-            },
-
-            formatDate(dateString) {
-                return new Date(dateString).toLocaleDateString('th-TH');
-            }
-        };
-
-        // ========================================
-        // AI PROCESSOR FUNCTIONS
-        // ========================================
-        const AIProcessor = {
-            async processSingle() {
-                const url = document.getElementById('youtubeUrl').value.trim();
-
-                if (!url) {
-                    Utils.showToast('กรุณาใส่ YouTube URL', 'error');
-                    return;
-                }
-
-                if (!this.isValidYouTubeUrl(url)) {
-                    Utils.showToast('YouTube URL ไม่ถูกต้อง', 'error');
-                    return;
-                }
-
-                try {
-                    Utils.showToast('กำลังประมวลผล...', 'info');
-
-                    const response = await fetch('/api/ai/process-youtube', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            youtubeUrl: url,
-                            adminEmail: 'duy.kan1234@gmail.com'
-                        })
-                    });
-
-                    let result;
-                    try {
-                        result = await response.json();
-                    } catch (jsonError) {
-                        console.error('JSON parsing error:', jsonError);
-                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
-                        return;
-                    }
-
-                    if (result.success) {
-                        Utils.showToast('ประมวลอง YouTube URL สำเร็จ', 'success');
-                        document.getElementById('youtubeUrl').value = '';
-                        this.showResults([{
-                            success: true,
-                            movieData: result.data,
-                            data: result.data
-                        }]);
-
-                        // Refresh movies table
-                        await API.loadMovies();
-                    } else {
-                        Utils.showToast(`ผิดพลาด: ${result.error}`, 'error');
-                    }
-
-                } catch (error) {
-                    console.error('Error processing single URL:', error);
-                    Utils.showToast('เกิดข้อผิดพลาดในการประมวลอง', 'error');
-                }
-            },
-
-            async processBatch() {
-                const urlsText = document.getElementById('youtubeUrls').value.trim();
-                const urls = urlsText.split('\n').filter(url => url.trim());
-
-                if (urls.length === 0) {
-                    Utils.showToast('กรุณาใส่ YouTube URLs', 'error');
-                    return;
-                }
-
-                const invalidUrls = urls.filter(url => !this.isValidYouTubeUrl(url.trim()));
-                if (invalidUrls.length > 0) {
-                    Utils.showToast(`พบ YouTube URLs ไม่ถูกต้อง ${invalidUrls.length} รายการ`, 'error');
-                    return;
-                }
-
-                try {
-                    Utils.showToast('กำลังประมวลผลหลาย URL...', 'info');
-
-                    const response = await fetch('/api/ai/batch-process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            urls: urls,
-                            adminEmail: 'duy.kan1234@gmail.com'
-                        })
-                    });
-
-                    let result;
-                    try {
-                        result = await response.json();
-                    } catch (jsonError) {
-                        console.error('JSON parsing error:', jsonError);
-                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
-                        return;
-                    }
-
-                    if (result.success) {
-                        Utils.showToast(`ประมวลอง YouTube URLs ${urls.length} รายการสำเร็จ`, 'success');
-                        document.getElementById('youtubeUrls').value = '';
-                        this.showResults(result.data.results || result.data);
-
-                        // Refresh movies table
-                        await API.loadMovies();
-                    } else {
-                        Utils.showToast(`ผิดพลาด: ${result.error}`, 'error');
-                    }
-
-                } catch (error) {
-                    console.error('Error processing batch URLs:', error);
-                    Utils.showToast('เกิดข้อผิดพลาดในการประมวลอง', 'error');
-                }
-            },
-
-            isValidYouTubeUrl(url) {
-                const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/;
-                return youtubeRegex.test(url);
-            },
-
-            showResults(results) {
-                const resultsSection = document.getElementById('aiResults');
-                const resultsGrid = document.getElementById('resultsGrid');
-
-                if (results && results.length > 0) {
-                    resultsSection.style.display = 'block';
-
-                    resultsGrid.innerHTML = results.map((result) => `
-                        <div class="result-item ${result.success ? 'success' : 'error'}">
-                            <h3 class="result-title">${result.movieData?.title || result.data?.title || 'Processing...'}</h3>
-                            
-                            <div class="result-meta">
-                                <span class="result-status ${result.success ? 'success' : 'error'}">
-                                    ${result.success ? '✅ สำเร็จ' : '❌ ผิดพลาด'}
-                                </span>
-                                ${result.success ? `<span class="result-id">ID: ${result.movieData?.id || result.data?.id || 'N/A'}</span>` : ''}
-                            </div>
-                            
-                            ${result.success ? `
-                                <div class="result-details">
-                                    <p><strong>คำอธิบาย:</strong> ${result.movieData?.description || result.data?.description || 'ไม่มีคำอธิบาย'}</p>
-                                    <p><strong>Category:</strong> ${result.movieData?.category || result.data?.category || 'N/A'}</p>
-                                    <p><strong>Platform:</strong> ${result.movieData?.platform || result.data?.platform || 'N/A'}</p>
-                                    <p><strong>YouTube ID:</strong> ${result.movieData?.ytId || result.data?.ytId || 'N/A'}</p>
-                                </div>
-                            ` : `
-                                <div class="result-error">
-                                    <p><strong>ข้อผิดพลาด:</strong> ${result.error || 'Unknown error'}</p>
-                                </div>
-                            `}
-                        </div>
-                    `).join('');
-                } else {
-                    resultsSection.style.display = 'none';
-                }
-            }
-        };
-
-        // ========================================
-        // GLOBAL FUNCTIONS
-        // ========================================
-        function toggleAIProcessor() {
-            const section = document.getElementById('aiProcessorSection');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function processSingle() {
-            AIProcessor.processSingle();
-        }
-
-        function processBatch() {
-            AIProcessor.processBatch();
-        }
-
-        // ========================================
-        // API FUNCTIONS
-        // ========================================
-        const API = {
-            async loadMovies() {
-                try {
-                    AppState.isLoading = true;
-                    const response = await fetch('/api/movies');
-                    const result = await response.json();
-
-                    if (result.success) {
-                        AppState.movies = result.data;
-                        AppState.filteredMovies = result.data;
-                        UI.renderMoviesTable();
-                        return true;
-                    }
-                } catch (error) {
-                    console.error('Error loading movies:', error);
-                    Utils.showToast('ไม่สามารถโหลดข้อมูลหนังได้', 'error');
-                    return false;
-                } finally {
-                    AppState.isLoading = false;
-                }
-            },
-
-            async saveMovie(movieData) {
-                try {
-                    const response = await fetch('/api/movies', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(movieData)
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        Utils.showToast('บันทึกหนังสำเร็จ', 'success');
-                        await API.loadMovies();
-                        closeModal();
-                        return true;
-                    } else {
-                        Utils.showToast(result.message || 'ไม่สามารถบันทึกหนังได้', 'error');
-                        return false;
-                    }
-                } catch (error) {
-                    console.error('Error saving movie:', error);
-                    Utils.showToast('ไม่สามารถบันทึกหนังได้', 'error');
-                    return false;
-                }
-            },
-
-            async deleteMovie(movieId) {
-                try {
-                    const response = await fetch(`/api/movies/${movieId}`, {
-                        method: 'DELETE'
-                    });
-
-                    let result;
-                    try {
-                        result = await response.json();
-                    } catch (jsonError) {
-                        console.error('JSON parsing error:', jsonError);
-                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
-                        return false;
-                    }
-
-                    if (result.success) {
-                        Utils.showToast('ลบหนังสำเร็จ', 'success');
-                        await API.loadMovies();
-                        return true;
-                    } else {
-                        Utils.showToast(result.message || 'ไม่สามารถลบหนังได้', 'error');
-                        return false;
-                    }
-                } catch (error) {
-                    console.error('Error deleting movie:', error);
-                    Utils.showToast('ไม่สามารถลบหนังได้', 'error');
-                    return false;
-                }
-            }
-        };
-
-        // ========================================
-        // UI FUNCTIONS
-        // ========================================
-        const UI = {
-            renderMoviesTable() {
-                const tbody = document.getElementById('moviesTableBody');
-
-                if (AppState.filteredMovies.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                                <i class="fas fa-film" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
-                                <p>ไม่พบข้อมูลหนัง</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tbody.innerHTML = AppState.filteredMovies.map(movie => `
-                    <tr>
-                        <td>
-                            <div class="movie-info">
-                                <img src="${movie.poster || 'https://placehold.co/60x90?text=No+Image'}" alt="${movie.title}" class="movie-poster">
-                                <div class="movie-details">
-                                    <h4>${movie.title}</h4>
-                                    <p>${movie.description || 'ไม่มีคำอธิบาย'}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${movie.category || 'N/A'}</td>
-                        <td>${movie.year || 'N/A'}</td>
-                        <td>${Utils.formatNumber(movie.viewCount || 0)}</td>
-                        <td>
-                            <span class="status-badge ${movie.status || 'active'}">
-                                ${movie.status === 'active' ? 'ใช้งาน' : 'ไม่ใช้งาน'}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="table-actions">
-                                <button class="action-btn edit" onclick="editMovie('${movie.id}')" title="แก้ไข">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" onclick="deleteMovie('${movie.id}')" title="ลบ">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            },
-
-            updateStats() {
-                // Update stats cards with real data
-                const totalMovies = AppState.movies.length;
-                const totalViews = AppState.movies.reduce((sum, movie) => sum + (movie.viewCount || 0), 0);
-                const activeMovies = AppState.movies.filter(movie => movie.status === 'active').length;
-
-                // Update DOM (would need to add IDs to stat cards)
-                // This is a placeholder for stats updates
-            }
-        };
-
-        // ========================================
-        // MODAL FUNCTIONS
-        // ========================================
-        function openAddMovieModal() {
-            document.getElementById('movieModal').classList.add('active');
-            document.getElementById('movieForm').reset();
-            AppState.currentMovie = null;
-        }
-
-        function openEditMovieModal(movie) {
-            document.getElementById('movieModal').classList.add('active');
-            AppState.currentMovie = movie;
-
-            // Fill form with movie data
-            document.getElementById('movieTitle').value = movie.title || '';
-            document.getElementById('movieDescription').value = movie.description || '';
-            document.getElementById('movieYear').value = movie.year || '';
-            document.getElementById('movieCategory').value = movie.category || '';
-            document.getElementById('moviePoster').value = movie.poster || '';
-            document.getElementById('movieYoutube').value = movie.youtube || '';
-            document.getElementById('movieStatus').value = movie.status || 'active';
-        }
-
-        function closeModal() {
-            document.getElementById('movieModal').classList.remove('active');
-            document.getElementById('movieForm').reset();
-            AppState.currentMovie = null;
-        }
-
-        function editMovie(movieId) {
-            const movie = AppState.movies.find(m => m.id === movieId);
-            if (movie) {
-                openEditMovieModal(movie);
-            }
-        }
-
-        async function deleteMovie(movieId) {
-            if (confirm('คุณต้องการลบหนังนี้ใช่หรือ?')) {
-                await API.deleteMovie(movieId);
-            }
-        }
-
-        // ========================================
-        // EVENT LISTENERS
-        // ========================================
-        document.getElementById('movieForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const movieData = {
-                title: document.getElementById('movieTitle').value,
-                description: document.getElementById('movieDescription').value,
-                year: parseInt(document.getElementById('movieYear').value),
-                category: document.getElementById('movieCategory').value,
-                poster: document.getElementById('moviePoster').value,
-                youtube: document.getElementById('movieYoutube').value,
-                status: document.getElementById('movieStatus').value,
-                viewCount: 0,
-                isVip: false,
-                platform: 'Movie',
-                createdAt: new Date().toISOString()
-            };
-
-            await API.saveMovie(movieData);
-        });
-
-        // Search functionality
-        document.querySelector('.search-input').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-
-            if (searchTerm === '') {
-                AppState.filteredMovies = AppState.movies;
-            } else {
-                AppState.filteredMovies = AppState.movies.filter(movie =>
-                    movie.title.toLowerCase().includes(searchTerm) ||
-                    movie.description.toLowerCase().includes(searchTerm) ||
-                    movie.category.toLowerCase().includes(searchTerm)
-                );
-            }
-
-            UI.renderMoviesTable();
-        });
-
-        // Close modal on outside click
-        document.getElementById('movieModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                closeModal();
-            }
-        });
-
-        // ========================================
-        // APPLICATION INITIALIZATION
-        // ========================================
-        async function initApp() {
-            // Load movies data
-            await API.loadMovies();
-
-            // Update stats
-            UI.updateStats();
-
-            console.log('[INFO] Admin dashboard initialized');
-        }
-
-        // ========================================
-        // START APPLICATION
-        // ========================================
-        document.addEventListener('DOMContentLoaded', initApp);
-
-        // Add CSS animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+    <!-- Local Scripts -->
+    <script src="/js/admin-dashboard.js" defer></script>
 </body>
-
 </html>
