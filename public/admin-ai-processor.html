@@ -839,20 +839,14 @@
         // ========================================
         // AUTHENTICATION STATE - Mock for now
         // ========================================
-        // Mock admin user for testing
-        AppState.currentUser = {
-            email: 'duy.kan1234@gmail.com',
-            displayName: 'DUYDOO Admin',
-            photoURL: 'https://via.placeholder.com/100x100?text=Admin'
-        };
-        UI.updateUserInfo(AppState.currentUser);
+        // CONSOLE DEBUGGING
+        // ========================================
+        console.log('🤖 AI YouTube Processor initialized');
+        console.log('📝 Mock user:', AppState.currentUser);
+        console.log('🔧 Firebase disabled - using mock data');
 
-        // ========================================
-        // APPLICATION STARTUP
-        // ========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🤖 AI YouTube Processor initialized');
-        });
+        // Initialize UI
+        UI.updateUserInfo(AppState.currentUser);
     </script>
 </body>
 
