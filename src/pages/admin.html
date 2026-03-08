@@ -1,0 +1,348 @@
+<!-- Admin Page Template -->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แอดมิน - DUYDODEE</title>
+    
+    <!-- External Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/build/css/main.css">
+    <link rel="stylesheet" href="/build/css/admin.css">
+    <link rel="stylesheet" href="/build/css/components.css">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="adminLoader" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Admin Layout -->
+    <div class="admin-layout">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-sidebar-logo">
+                    <i class="fas fa-play-circle"></i>
+                    <span>DUYDODEE</span>
+                    <small>Admin Panel</small>
+                </div>
+            </div>
+            
+            <nav class="admin-sidebar-nav">
+                <ul class="admin-sidebar-menu">
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link active" data-view="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>แดชบอร์ด</span>
+                        </a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link" data-view="movies">
+                            <i class="fas fa-film"></i>
+                            <span>จัดการซีรีส์</span>
+                        </a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link" data-view="users">
+                            <i class="fas fa-users"></i>
+                            <span>จัดการผู้ใช้</span>
+                        </a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link" data-view="ai-processor">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Processor</span>
+                        </a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link" data-view="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>รายงาน</span>
+                        </a>
+                    </li>
+                    <li class="admin-sidebar-item">
+                        <a href="#" class="admin-sidebar-link" data-view="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>ตั้งค่า</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Admin Main Content -->
+        <main class="admin-main">
+            <!-- Admin Header -->
+            <header class="admin-header">
+                <h1 class="admin-title">แดชบอร์ด</h1>
+                <div class="admin-actions">
+                    <button class="admin-btn admin-btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        รีเฟรช
+                    </button>
+                    <div class="admin-user">
+                        <img src="/build/assets/images/default-avatar.jpg" alt="Admin" class="admin-avatar">
+                        <span>DUYDOO Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section class="admin-view" id="dashboardView">
+                <!-- Stats Cards -->
+                <div class="admin-stats">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="admin-stat-value" id="totalMovies">0</div>
+                        <div class="admin-stat-label">ซีรีส์ทั้งหมด</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="admin-stat-value" id="totalUsers">0</div>
+                        <div class="admin-stat-label">ผู้ใช้ทั้งหมด</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="admin-stat-value" id="totalViews">0</div>
+                        <div class="admin-stat-label">การรับชม</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="admin-stat-value" id="totalRevenue">0</div>
+                        <div class="admin-stat-label">รายได้</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">กิจกรรมล่าสุด</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p>เพิ่มซีรีส์ใหม่: "The Last of Us"</p>
+                                    <small>2 ชั่วโมงที่แล้ว</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p>ผู้ใช้ใหม่ลงทะเบียน: user123</p>
+                                    <small>3 ชั่วโมงที่แล้ว</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p>อัปเดตซีรีส์: "Stranger Things"</p>
+                                    <small>5 ชั่วโมงที่แล้ว</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">การกระทำเร็ว</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="quick-actions">
+                            <button class="admin-btn admin-btn-primary" onclick="AdminUI.showMovieModal()">
+                                <i class="fas fa-plus"></i>
+                                เพิ่มซีรีส์ใหม่
+                            </button>
+                            <button class="admin-btn admin-btn-secondary" onclick="window.location.href='/admin-ai-processor.html'">
+                                <i class="fas fa-robot"></i>
+                                AI Processor
+                            </button>
+                            <button class="admin-btn admin-btn-secondary" onclick="window.location.href='/'">
+                                <i class="fas fa-external-link-alt"></i>
+                                ดูเว็บไซต์
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Movies View -->
+            <section class="admin-view" id="moviesView" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">จัดการซีรีส์</h3>
+                        <button class="admin-btn admin-btn-primary" onclick="AdminUI.showMovieModal()">
+                            <i class="fas fa-plus"></i>
+                            เพิ่มซีรีส์ใหม่
+                        </button>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>รูปภาพ</th>
+                                        <th>ชื่อซีรีส์</th>
+                                        <th>ปี</th>
+                                        <th>สถานะ</th>
+                                        <th>วันที่สร้าง</th>
+                                        <th>การกระทำ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="moviesTableBody">
+                                    <!-- Movies will be rendered here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users View -->
+            <section class="admin-view" id="usersView" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">จัดการผู้ใช้</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>รูปภาพ</th>
+                                        <th>ชื่อผู้ใช้</th>
+                                        <th>อีเมล</th>
+                                        <th>สถานะ</th>
+                                        <th>วันที่สมัคร</th>
+                                        <th>การกระทำ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Users will be rendered here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Processor View -->
+            <section class="admin-view" id="ai-processorView" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">AI YouTube Processor</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <form id="aiProcessorForm" class="admin-form">
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">YouTube URL</label>
+                                <input type="url" id="youtubeUrl" class="admin-form-input" 
+                                       placeholder="https://www.youtube.com/watch?v=..." required>
+                            </div>
+                            <div class="admin-form-group">
+                                <button type="submit" class="admin-btn admin-btn-primary">
+                                    <i class="fas fa-robot"></i>
+                                    ประมวลองด้วย AI
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports View -->
+            <section class="admin-view" id="reportsView" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">รายงาน</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <p>รายงานจะแสดงที่นี่...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section class="admin-view" id="settingsView" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">ตั้งค่า</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <p>การตั้งค่าจะแสดงที่นี่...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Movie Modal -->
+    <div class="admin-modal" id="movieModal" style="display: none;">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title" id="modalTitle">เพิ่มซีรีส์ใหม่</h3>
+                <button class="admin-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="movieForm" class="admin-form">
+                <div class="admin-form-group">
+                    <label class="admin-form-label">ชื่อซีรีส์</label>
+                    <input type="text" name="title" class="admin-form-input" required>
+                </div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label">คำอธิบาย</label>
+                    <textarea name="description" class="admin-form-textarea" rows="4"></textarea>
+                </div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label">ปี</label>
+                    <input type="number" name="year" class="admin-form-input" min="1900" max="2030">
+                </div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label">สถานะ</label>
+                    <select name="status" class="admin-form-select">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <button type="submit" class="admin-btn admin-btn-primary">
+                        <i class="fas fa-save"></i>
+                        บันทึก
+                    </button>
+                    <button type="button" class="admin-btn admin-btn-secondary" onclick="AdminUI.hideMovieModal()">
+                        <i class="fas fa-times"></i>
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="/build/js/utils.js"></script>
+    <script src="/build/js/admin.js"></script>
+</body>
+</html>

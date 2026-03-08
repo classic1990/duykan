@@ -1,3 +1,5 @@
+import { showToast, formatNumber, formatDate, debounce, highlightText } from './common.js';
+
 // ========================================
 // APPLICATION STATE
 // ========================================
@@ -5,7 +7,9 @@ const AppState = {
     movies: [],
     filteredMovies: [],
     currentMovie: null,
-    isLoading: false
+    isLoading: false,
+    currentPage: 1,
+    itemsPerPage: 5
 };
 
 // ========================================
@@ -20,7 +24,10 @@ const DOMElements = {
     closeModalBtn: document.getElementById('closeModalBtn'),
     cancelModalBtn: document.getElementById('cancelModalBtn'),
     searchInput: document.querySelector('.search-input'),
+    clearSearchBtn: document.getElementById('clearSearchBtn'),
+    exportCsvBtn: document.getElementById('exportCsvBtn'),
     aiProcessorSection: document.getElementById('aiProcessorSection'),
+    paginationContainer: document.getElementById('paginationContainer'),
     toggleAIProcessorBtn: document.getElementById('toggleAIProcessorBtn'),
     processSingleBtn: document.getElementById('processSingleBtn'),
     processBatchBtn: document.getElementById('processBatchBtn'),
@@ -28,6 +35,11 @@ const DOMElements = {
     youtubeUrlsTextarea: document.getElementById('youtubeUrls'),
     aiResultsSection: document.getElementById('aiResults'),
     resultsGrid: document.getElementById('resultsGrid'),
+    viewsChart: document.getElementById('viewsChart'),
+    // Stats
+    statTotalMovies: document.getElementById('statTotalMovies'),
+    statTotalViews: document.getElementById('statTotalViews'),
+    statActiveRate: document.getElementById('statActiveRate'),
     // Form fields
     movieTitle: document.getElementById('movieTitle'),
     movieDescription: document.getElementById('movieDescription'),
@@ -39,27 +51,139 @@ const DOMElements = {
 };
 
 // ========================================
-// UTILITY FUNCTIONS
+// CHART MANAGER
 // ========================================
-const Utils = {
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
+const ChartManager = {
+    chartInstance: null,
 
-        setTimeout(() => {
-            toast.style.animation = 'slideOut 0.3s ease forwards';
-            toast.addEventListener('animationend', () => toast.remove());
-        }, 3000);
+    createDoughnutChart(labels, data) {
+        if (this.chartInstance) {
+            this.chartInstance.destroy();
+        }
+
+        const ctx = DOMElements.viewsChart.getContext('2d');
+
+        this.chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'จำนวนหนัง',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(229, 9, 20, 0.8)',    // Primary Red
+                        'rgba(54, 162, 235, 0.8)', // Blue
+                        'rgba(255, 206, 86, 0.8)', // Yellow
+                        'rgba(75, 192, 192, 0.8)',  // Teal
+                        'rgba(153, 102, 255, 0.8)',// Purple
+                        'rgba(255, 159, 64, 0.8)'  // Orange
+                    ],
+                    borderColor: 'var(--bg-card)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: 'var(--text-muted)',
+                            font: { family: 'Prompt' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: { family: 'Prompt', size: 14 },
+                        bodyFont: { family: 'Prompt', size: 12 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        boxPadding: 4,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' เรื่อง';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     },
 
-    formatNumber(num) {
-        return new Intl.NumberFormat('th-TH').format(num);
+    updateWithMovieData() {
+        if (!AppState.movies || AppState.movies.length === 0) {
+            return;
+        }
+
+        const categoryCounts = AppState.movies.reduce((acc, movie) => {
+            const category = movie.category || 'ไม่ระบุ';
+            acc[category] = (acc[category] || 0) + 1;
+            return acc;
+        }, {});
+
+        const labels = Object.keys(categoryCounts);
+        const data = Object.values(categoryCounts);
+
+        this.createDoughnutChart(labels, data);
+    }
+};
+
+// ========================================
+// EXPORTER FUNCTIONS
+// ========================================
+const Exporter = {
+    convertToCSV(data) {
+        if (!data || data.length === 0) {
+            return '';
+        }
+
+        const headers = ['id', 'title', 'description', 'category', 'year', 'rating', 'viewCount', 'status', 'youtube'];
+        const csvRows = [];
+
+        // Add headers
+        csvRows.push(headers.join(','));
+
+        // Add data rows
+        for (const row of data) {
+            const values = headers.map(header => {
+                let value = row[header];
+                if (value === null || value === undefined) {
+                    value = '';
+                } else {
+                    value = String(value).replace(/(\r\n|\n|\r)/gm, " "); // Remove newlines
+                }
+                // Escape quotes and handle commas
+                if (value.includes('"') || value.includes(',')) {
+                    value = `"${value.replace(/"/g, '""')}"`;
+                }
+                return value;
+            });
+            csvRows.push(values.join(','));
+        }
+
+        return csvRows.join('\n');
     },
 
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('th-TH');
+    exportToCSV() {
+        const dataToExport = AppState.filteredMovies;
+        if (dataToExport.length === 0) {
+            showToast('ไม่มีข้อมูลสำหรับส่งออก', 'warning');
+            return;
+        }
+        const csvString = this.convertToCSV(dataToExport);
+        const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = Object.assign(document.createElement('a'), { href: url, download: `duydodee-movies-${new Date().toISOString().slice(0, 10)}.csv` });
+        document.body.appendChild(link).click();
+        document.body.removeChild(link);
     }
 };
 
@@ -70,11 +194,11 @@ const AIProcessor = {
     async processSingle() {
         const url = DOMElements.youtubeUrlInput.value.trim();
         if (!url) {
-            Utils.showToast('กรุณาใส่ YouTube URL', 'error');
+            showToast('กรุณาใส่ YouTube URL', 'error');
             return;
         }
         if (!this.isValidYouTubeUrl(url)) {
-            Utils.showToast('YouTube URL ไม่ถูกต้อง', 'error');
+            showToast('YouTube URL ไม่ถูกต้อง', 'error');
             return;
         }
         this.processUrls([url]);
@@ -85,12 +209,12 @@ const AIProcessor = {
         const urls = urlsText.split('
 ').filter(url => url.trim());
         if (urls.length === 0) {
-            Utils.showToast('กรุณาใส่ YouTube URLs', 'error');
+            showToast('กรุณาใส่ YouTube URLs', 'error');
             return;
         }
         const invalidUrls = urls.filter(url => !this.isValidYouTubeUrl(url.trim()));
         if (invalidUrls.length > 0) {
-            Utils.showToast(`พบ YouTube URLs ไม่ถูกต้อง ${invalidUrls.length} รายการ`, 'error');
+            showToast(`พบ YouTube URLs ไม่ถูกต้อง ${invalidUrls.length} รายการ`, 'error');
             return;
         }
         this.processUrls(urls);
@@ -100,7 +224,7 @@ const AIProcessor = {
         const endpoint = urls.length > 1 ? '/api/ai/batch-process' : '/api/ai/process-youtube';
         const body = urls.length > 1 ? { urls, adminEmail: 'duy.kan1234@gmail.com' } : { youtubeUrl: urls[0], adminEmail: 'duy.kan1234@gmail.com' };
         
-        Utils.showToast(`กำลังประมวลผล ${urls.length} URL...`, 'info');
+        showToast(`กำลังประมวลผล ${urls.length} URL...`, 'info');
 
         try {
             const response = await fetch(endpoint, {
@@ -117,7 +241,7 @@ const AIProcessor = {
             const result = await response.json();
 
             if (result.success) {
-                Utils.showToast(`ประมวลผลสำเร็จ ${urls.length} URL`, 'success');
+                showToast(`ประมวลผลสำเร็จ ${urls.length} URL`, 'success');
                 DOMElements.youtubeUrlInput.value = '';
                 DOMElements.youtubeUrlsTextarea.value = '';
                 
@@ -130,7 +254,7 @@ const AIProcessor = {
             }
         } catch (error) {
             console.error('Error processing URL(s):', error);
-            Utils.showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
         }
     },
 
@@ -186,10 +310,12 @@ const API = {
                 AppState.movies = result.data;
                 AppState.filteredMovies = result.data;
                 UI.renderMoviesTable();
+                UI.updateStats();
+                ChartManager.updateWithMovieData();
             }
         } catch (error) {
             console.error('Error loading movies:', error);
-            Utils.showToast('ไม่สามารถโหลดข้อมูลหนังได้', 'error');
+            showToast('ไม่สามารถโหลดข้อมูลหนังได้', 'error');
         } finally {
             AppState.isLoading = false;
         }
@@ -208,7 +334,7 @@ const API = {
             });
             const result = await response.json();
             if (result.success) {
-                Utils.showToast('บันทึกหนังสำเร็จ', 'success');
+                showToast('บันทึกหนังสำเร็จ', 'success');
                 await API.loadMovies();
                 UI.closeModal();
             } else {
@@ -216,7 +342,7 @@ const API = {
             }
         } catch (error) {
             console.error('Error saving movie:', error);
-            Utils.showToast(error.message, 'error');
+            showToast(error.message, 'error');
         }
     },
 
@@ -225,14 +351,14 @@ const API = {
             const response = await fetch(`/api/movies/${movieId}`, { method: 'DELETE' });
             const result = await response.json();
             if (result.success) {
-                Utils.showToast('ลบหนังสำเร็จ', 'success');
+                showToast('ลบหนังสำเร็จ', 'success');
                 await API.loadMovies();
             } else {
                 throw new Error(result.message || 'ไม่สามารถลบหนังได้');
             }
         } catch (error) {
             console.error('Error deleting movie:', error);
-            Utils.showToast(error.message, 'error');
+            showToast(error.message, 'error');
         }
     }
 };
@@ -241,24 +367,31 @@ const API = {
 // UI FUNCTIONS (Modal, Table, etc.)
 // ========================================
 const UI = {
-    renderMoviesTable() {
+    renderMoviesTable(searchTerm = '') {
+        const { currentPage, itemsPerPage, filteredMovies } = AppState;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedMovies = filteredMovies.slice(startIndex, endIndex);
+
         const tbody = DOMElements.moviesTableBody;
-        if (AppState.filteredMovies.length === 0) {
+        if (filteredMovies.length === 0) {
             tbody.innerHTML = `
                 <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
                     <i class="fas fa-film" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
                     <p>ไม่พบข้อมูลหนัง</p>
                 </td></tr>`;
+            // Clear pagination if no results
+            DOMElements.paginationContainer.innerHTML = '';
             return;
         }
-        tbody.innerHTML = AppState.filteredMovies.map(movie => `
+        tbody.innerHTML = paginatedMovies.map(movie => `
             <tr>
                 <td>
                     <div class="movie-info">
                         <img src="${movie.poster || 'https://placehold.co/60x90?text=No+Image'}" alt="${movie.title}" class="movie-poster">
                         <div class="movie-details">
-                            <h4>${movie.title}</h4>
-                            <p>${movie.description || 'ไม่มีคำอธิบาย'}</p>
+                            <h4>${highlightText(movie.title, searchTerm)}</h4>
+                            <p>${highlightText(movie.description || 'ไม่มีคำอธิบาย', searchTerm)}</p>
                         </div>
                     </div>
                 </td>
@@ -274,6 +407,31 @@ const UI = {
                 </td>
             </tr>
         `).join('');
+        this.renderPagination();
+    },
+
+    renderPagination() {
+        const { currentPage, itemsPerPage, filteredMovies } = AppState;
+        const totalPages = Math.ceil(filteredMovies.length / itemsPerPage);
+        const container = DOMElements.paginationContainer;
+
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let paginationHTML = '<div class="pagination-controls">';
+        // Prev button
+        paginationHTML += `<button class="pagination-btn" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>ก่อนหน้า</button>`;
+        
+        // Page info
+        paginationHTML += `<span class="pagination-info">หน้า ${currentPage} / ${totalPages}</span>`;
+
+        // Next button
+        paginationHTML += `<button class="pagination-btn" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>ถัดไป</button>`;
+        
+        paginationHTML += '</div>';
+        container.innerHTML = paginationHTML;
     },
     
     openModalForEdit(movie) {
@@ -303,6 +461,29 @@ const UI = {
     toggleAIProcessor() {
         const section = DOMElements.aiProcessorSection;
         section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    },
+
+    updateStats() {
+        const { movies } = AppState;
+        
+        // 1. Total Movies
+        const totalMovies = movies.length;
+        if (DOMElements.statTotalMovies) {
+            DOMElements.statTotalMovies.textContent = formatNumber(totalMovies);
+        }
+
+        // 2. Total Views
+        const totalViews = movies.reduce((acc, movie) => acc + (parseInt(movie.viewCount) || 0), 0);
+        if (DOMElements.statTotalViews) {
+            DOMElements.statTotalViews.textContent = formatNumber(totalViews);
+        }
+
+        // 3. Active Rate (Movies active / Total)
+        if (totalMovies > 0 && DOMElements.statActiveRate) {
+            const activeMovies = movies.filter(m => m.status === 'active').length;
+            const rate = (activeMovies / totalMovies) * 100;
+            DOMElements.statActiveRate.textContent = rate.toFixed(1) + '%';
+        }
     }
 };
 
@@ -324,6 +505,22 @@ function handleTableActions(e) {
     }
 }
 
+function handlePagination(e) {
+    const button = e.target.closest('.pagination-btn');
+    if (!button || button.disabled) return;
+
+    const pageAction = button.dataset.page;
+    const totalPages = Math.ceil(AppState.filteredMovies.length / AppState.itemsPerPage);
+
+    if (pageAction === 'prev' && AppState.currentPage > 1) {
+        AppState.currentPage--;
+    } else if (pageAction === 'next' && AppState.currentPage < totalPages) {
+        AppState.currentPage++;
+    }
+    
+    UI.renderMoviesTable();
+}
+
 async function handleFormSubmit(e) {
     e.preventDefault();
     const movieData = {
@@ -338,19 +535,26 @@ async function handleFormSubmit(e) {
     await API.saveMovie(movieData);
 }
 
-function handleSearch(e) {
-    const searchTerm = e.target.value.toLowerCase();
+function performSearch(searchTerm) {
+    AppState.currentPage = 1; // Reset to first page on new search
+    DOMElements.clearSearchBtn.style.display = searchTerm ? 'block' : 'none';
+
     if (searchTerm === '') {
         AppState.filteredMovies = AppState.movies;
     } else {
+        const lowerCaseTerm = searchTerm.toLowerCase();
         AppState.filteredMovies = AppState.movies.filter(movie =>
-            movie.title.toLowerCase().includes(searchTerm) ||
-            (movie.description && movie.description.toLowerCase().includes(searchTerm)) ||
-            movie.category.toLowerCase().includes(searchTerm)
+            movie.title.toLowerCase().includes(lowerCaseTerm) ||
+            (movie.description && movie.description.toLowerCase().includes(lowerCaseTerm)) ||
+            movie.category.toLowerCase().includes(lowerCaseTerm)
         );
     }
-    UI.renderMoviesTable();
+    UI.renderMoviesTable(searchTerm);
 }
+
+const handleSearchInput = debounce((e) => {
+    performSearch(e.target.value);
+}, 300); // 300ms debounce delay
 
 // ========================================
 // APPLICATION INITIALIZATION
@@ -364,8 +568,15 @@ async function initApp() {
         if (e.target === e.currentTarget) UI.closeModal();
     });
     DOMElements.movieForm.addEventListener('submit', handleFormSubmit);
-    DOMElements.searchInput.addEventListener('input', handleSearch);
+    DOMElements.searchInput.addEventListener('input', handleSearchInput);
+    DOMElements.clearSearchBtn.addEventListener('click', () => {
+        DOMElements.searchInput.value = '';
+        performSearch('');
+        DOMElements.searchInput.focus();
+    });
+    DOMElements.exportCsvBtn.addEventListener('click', Exporter.exportToCSV);
     DOMElements.moviesTableBody.addEventListener('click', handleTableActions);
+    DOMElements.paginationContainer.addEventListener('click', handlePagination);
     DOMElements.toggleAIProcessorBtn.addEventListener('click', UI.toggleAIProcessor);
     DOMElements.processSingleBtn.addEventListener('click', () => AIProcessor.processSingle());
     DOMElements.processBatchBtn.addEventListener('click', () => AIProcessor.processBatch());

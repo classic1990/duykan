@@ -1,6 +1,7 @@
 // Import Firebase auth service from the initialization file
 import { auth } from './firebase-init.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { showToast, checkAdminAccess, isValidYouTubeUrl } from './common.js';
 
 // ========================================
 // DOM ELEMENTS
@@ -19,7 +20,13 @@ const DOMElements = {
     resultsGrid: document.getElementById('resultsGrid'),
     
     // Loading
-    loadingOverlay: document.getElementById('loadingOverlay')
+    loadingOverlay: document.getElementById('loadingOverlay'),
+
+    // Sidebar
+    userAvatar: document.getElementById('userAvatar'),
+    userName: document.getElementById('userName'),
+    userEmail: document.getElementById('userEmail'),
+    logoutBtn: document.getElementById('logoutBtn')
 };
 
 // ========================================
@@ -34,18 +41,6 @@ const AppState = {
 // UTILITY FUNCTIONS
 // ========================================
 const Utils = {
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.animation = 'slideOut 0.3s ease forwards';
-            toast.addEventListener('animationend', () => toast.remove());
-        }, 3000);
-    },
-    
     showLoading() {
         if(DOMElements.loadingOverlay) DOMElements.loadingOverlay.style.display = 'flex';
         AppState.isLoading = true;
@@ -54,11 +49,6 @@ const Utils = {
     hideLoading() {
         if(DOMElements.loadingOverlay) DOMElements.loadingOverlay.style.display = 'none';
         AppState.isLoading = false;
-    },
-
-    isValidYouTubeUrl(url) {
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/;
-        return youtubeRegex.test(url);
     }
 };
 
@@ -66,6 +56,13 @@ const Utils = {
 // UI FUNCTIONS
 // ========================================
 const UI = {
+    updateUserInfo(user) {
+        if (user) {
+            DOMElements.userName.textContent = user.displayName || user.email;
+            DOMElements.userEmail.textContent = user.email;
+            DOMElements.userAvatar.textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+        }
+    },
     showResults(results) {
         if (results && results.length > 0) {
             DOMElements.resultsSection.style.display = 'block';
@@ -104,7 +101,7 @@ const UI = {
 const Processor = {
     async processUrls(urls) {
         if (AppState.isLoading) {
-            Utils.showToast('AI กำลังทำงานอยู่ กรุณารอสักครู่', 'warning');
+            showToast('AI กำลังทำงานอยู่ กรุณารอสักครู่', 'warning');
             return;
         }
 
@@ -135,7 +132,7 @@ const Processor = {
             const result = await response.json();
 
             if (result.success) {
-                Utils.showToast(`ประมวลผลสำเร็จ ${urls.length} URL`, 'success');
+                showToast(`ประมวลผลสำเร็จ ${urls.length} URL`, 'success');
                 const resultsToShow = urls.length > 1 ? result.data.results || result.data : [{ success: true, data: result.data }];
                 UI.showResults(resultsToShow);
             } else {
@@ -143,7 +140,7 @@ const Processor = {
             }
         } catch (error) {
             console.error('Error processing URL(s):', error);
-            Utils.showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
             UI.showResults([{ success: false, error: error.message }]);
         } finally {
             Utils.hideLoading();
@@ -153,11 +150,11 @@ const Processor = {
     handleSingleProcess() {
         const url = DOMElements.youtubeUrlInput.value.trim();
         if (!url) {
-            Utils.showToast('กรุณาใส่ YouTube URL', 'error');
+            showToast('กรุณาใส่ YouTube URL', 'error');
             return;
         }
-        if (!Utils.isValidYouTubeUrl(url)) {
-            Utils.showToast('YouTube URL ไม่ถูกต้อง', 'error');
+        if (!isValidYouTubeUrl(url)) {
+            showToast('YouTube URL ไม่ถูกต้อง', 'error');
             return;
         }
         DOMElements.youtubeUrlInput.value = '';
@@ -180,17 +177,6 @@ const Processor = {
 };
 
 // ========================================
-// SECURITY & AUTHENTICATION
-// ========================================
-function checkAdminAccess(user) {
-    const ADMIN_EMAIL = "duy.kan1234@gmail.com";
-    if (!user || user.email !== ADMIN_EMAIL) {
-        Utils.showToast('คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กำลังนำทางกลับ...', 'error');
-        setTimeout(() => window.location.href = '/index.html', 2000);
-        return false;
-    }
-    return true;
-}
 
 // ========================================
 // APPLICATION INITIALIZATION
@@ -199,10 +185,22 @@ function init() {
     // Attach event listeners
     DOMElements.processSingleBtn.addEventListener('click', Processor.handleSingleProcess);
     DOMElements.processBatchBtn.addEventListener('click', Processor.handleBatchProcess);
+    DOMElements.logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+            signOut(auth).then(() => {
+                window.location.href = '/index.html';
+            }).catch(error => {
+                console.error('Logout Error:', error);
+                showToast('เกิดข้อผิดพลาดในการออกจากระบบ', 'error');
+            });
+        }
+    });
     
     // Auth state listener
     onAuthStateChanged(auth, (user) => {
         AppState.currentUser = user;
+        UI.updateUserInfo(user);
         // Hide page content if not authorized
         if (!checkAdminAccess(user)) {
              document.body.style.display = 'none';

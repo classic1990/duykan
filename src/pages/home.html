@@ -1,0 +1,200 @@
+<!-- Home Page Template -->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUYDODEE - ดูซีรีส์ออนไลน์ฟรี</title>
+    
+    <!-- External Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/build/css/main.css">
+    <link rel="stylesheet" href="/build/css/components.css">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header Component -->
+    <header class="header" id="header">
+        <!-- Include header component -->
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-bar" id="searchBar">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="ค้นหาซีรีส์, หนัง..." id="searchInput">
+            <button class="search-close" id="searchClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results" id="searchResults" style="display: none;">
+        <!-- Search results will be rendered here -->
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">DUYDODEE</h1>
+                    <p class="hero-subtitle">แพลตฟอร์มสตรีมมิ่งซีรีส์ออนไลน์ฟรี</p>
+                    <p class="hero-description">ดูซีรีส์และหนังออนไลน์คุณภาพสูง ไม่มีค่าใช้จ่าย</p>
+                    <div class="hero-actions">
+                        <a href="#series" class="btn btn-primary">
+                            <i class="fas fa-play"></i>
+                            เริ่มดูเลย
+                        </a>
+                        <a href="#features" class="btn btn-secondary">
+                            <i class="fas fa-info-circle"></i>
+                            เรียนรู้เพิ่มเติม
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="/build/assets/images/hero-image.jpg" alt="DUYDODEE Streaming">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <h2 class="section-title">คุณสมบัติพิเศษ</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <h3>ดูฟรี</h3>
+                        <p>ดูซีรีส์และหนังออนไลน์ฟรี ไม่มีค่าใช้จ่าย</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>รองรับทุกอุปกรณ์</h3>
+                        <p>ดูได้ทั้งบนมือถือ แท็บเล็ต และคอมพิวเตอร์</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-hd-video"></i>
+                        </div>
+                        <h3>คุณภาพสูง</h3>
+                        <p>วิดีโอคุณภาพ HD และ Full HD</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>เข้าถึงได้ทุกที่</h3>
+                        <p>ดูได้ทุกที่ทุกเวลา ตลอด 24 ชั่วโมง</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Series Section -->
+        <section class="series-section" id="series">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">ซีรีส์ยอดนิยม</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary" id="viewAllSeries">
+                            ดูทั้งหมด
+                        </button>
+                    </div>
+                </div>
+                <div class="movies-grid" id="moviesGrid">
+                    <!-- Movies will be rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+            <div class="container">
+                <h2 class="section-title">หมวดหมู่</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <img src="/build/assets/images/action.jpg" alt="แอคชั่น">
+                        <div class="category-overlay">
+                            <h3>แอคชั่น</h3>
+                            <p>ภาพยนตร์แอคชั่นทันสมัย</p>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <img src="/build/assets/images/romance.jpg" alt="โรแมนติก">
+                        <div class="category-overlay">
+                            <h3>โรแมนติก</h3>
+                            <p>เรื่องรักโรแมนติก</p>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <img src="/build/assets/images/horror.jpg" alt="สยองขวัญ">
+                        <div class="category-overlay">
+                            <h3>สยองขวัญ</h3>
+                            <p>หนังสยองขวัญน่าขนลุก</p>
+                        </div>
+                    </div>
+                    <div class="category-card">
+                        <img src="/build/assets/images/comedy.jpg" alt="คอมเมดี้">
+                        <div class="category-overlay">
+                            <h3>คอมเมดี้</h3>
+                            <p>หนังตลกขบขัน</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2 class="section-title">เกี่ยวกับ DUYDODEE</h2>
+                        <p>DUYDODEE เป็นแพลตฟอร์มสตรีมมิ่งซีรีส์ออนไลน์ฟรีที่ให้บริการภาพยนตร์คุณภาพสูงให้คุณดูได้ทุกที่ทุกเวลา</p>
+                        <p>เรามีคอลเลกชันซีรีส์และหนังหลากหลายประเภท พร้อมคำบรรยายภาษาไทย และอัปเดตใหม่ทุกสัปดาห์</p>
+                        <div class="about-stats">
+                            <div class="stat-item">
+                                <h3>1000+</h3>
+                                <p>ซีรีส์และหนัง</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>50K+</h3>
+                                <p>ผู้ใช้งานทุกเดือน</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>24/7</h3>
+                                <p>บริการตลอดเวลา</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-image">
+                        <img src="/build/assets/images/about-image.jpg" alt="DUYDODEE About">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Component -->
+    <footer class="footer">
+        <!-- Include footer component -->
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="/build/js/utils.js"></script>
+    <script src="/build/js/main.js"></script>
+</body>
+</html>

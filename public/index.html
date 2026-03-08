@@ -886,8 +886,22 @@
        ======================================== -->
     <script type="module">
         // Firebase SDK imports
-        import { auth } from './js/firebase-init.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8WxpOMCE-mDjQ43HM9jvsOlI-30T-b6Q",
+            authDomain: "classic-e8ab7.firebaseapp.com",
+            projectId: "classic-e8ab7",
+            storageBucket: "classic-e8ab7.appspot.com",
+            messagingSenderId: "596308927760",
+            appId: "1:596308927760:web:a12be9b2dffb5bc72cb195"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
         // ========================================
         // APPLICATION STATE

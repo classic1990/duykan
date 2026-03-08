@@ -1,7 +1,7 @@
 // Import Firebase auth service from the initialization file
-// Note the path is different because we are in a subdirectory
-import { auth } from '../../js/firebase-init.js'; 
+import { auth } from './firebase-init.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { showToast, checkAdminAccess } from './common.js';
 
 // ========================================
 // DOM ELEMENTS
@@ -19,24 +19,6 @@ const AppState = {
     currentUser: null,
     allReports: [],
     filteredReports: []
-};
-
-// ========================================
-// UTILITY FUNCTIONS
-// ========================================
-const Utils = {
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        // Using the dashboard toast classes for consistency
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.animation = 'slideOut 0.3s ease forwards';
-            toast.addEventListener('animationend', () => toast.remove());
-        }, 3000);
-    }
 };
 
 // ========================================
@@ -61,7 +43,7 @@ const API = {
             }
         } catch (error) {
             console.error('Error fetching reports:', error);
-            Utils.showToast(error.message, 'error');
+            showToast(error.message, 'error');
             UI.showError('ไม่สามารถโหลดข้อมูลรายงานได้');
         } finally {
             UI.showLoading(false);
@@ -77,14 +59,14 @@ const API = {
             });
             const result = await response.json();
             if (result.success) {
-                Utils.showToast('อัปเดตสถานะเรียบร้อย', 'success');
+                showToast('อัปเดตสถานะเรียบร้อย', 'success');
                 await this.fetchReports(); // Refresh data
             } else {
                 throw new Error(result.message || "Failed to update status.");
             }
         } catch (error) {
             console.error('Error updating report status:', error);
-            Utils.showToast(error.message, 'error');
+            showToast(error.message, 'error');
         }
     },
     
@@ -93,14 +75,14 @@ const API = {
             const response = await fetch(`/api/reports/${reportId}`, { method: 'DELETE' });
             const result = await response.json();
              if (result.success) {
-                Utils.showToast('ลบรายงานเรียบร้อย', 'success');
+                showToast('ลบรายงานเรียบร้อย', 'success');
                 await this.fetchReports(); // Refresh data
             } else {
                 throw new Error(result.message || "Failed to delete report.");
             }
         } catch (error) {
             console.error('Error deleting report:', error);
-            Utils.showToast(error.message, 'error');
+            showToast(error.message, 'error');
         }
     }
 };
@@ -173,19 +155,6 @@ const UI = {
         }
     }
 };
-
-// ========================================
-// SECURITY & AUTHENTICATION
-// ========================================
-function checkAdminAccess(user) {
-    const ADMIN_EMAIL = "duy.kan1234@gmail.com";
-    if (!user || user.email !== ADMIN_EMAIL) {
-        Utils.showToast('คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กำลังนำทางกลับ...', 'error');
-        setTimeout(() => window.location.href = '../../index.html', 2000);
-        return false;
-    }
-    return true;
-}
 
 // ========================================
 // APPLICATION INITIALIZATION

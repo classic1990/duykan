@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก - DUYDODEE</title>
+
+    <!-- External Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #141414;
+            --primary-red: #e50914;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --error: #e87c03;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .register-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 60px 68px 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 28px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Prompt', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            background: #454545;
+            outline: none;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 24px;
+            font-family: 'Prompt', sans-serif;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #c11119;
+        }
+
+        .btn-submit:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .form-footer {
+            margin-top: 16px;
+            color: #737373;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: white;
+            text-decoration: none;
+            margin-left: 5px;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 16px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Prompt', sans-serif;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-google:hover {
+            background: #f1f1f1;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #737373;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #737373;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 740px) {
+            .register-box {
+                padding: 40px 30px;
+            }
+            .navbar {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">DUY<span>DOO</span>DEE</a>
+    </nav>
+
+    <div class="register-container">
+        <div class="register-box">
+            <h1>สมัครสมาชิก</h1>
+            
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">เกิดข้อผิดพลาด</span>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="displayName" class="form-input" placeholder="ชื่อที่ต้องการแสดง" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="อีเมล" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="ยืนยันรหัสผ่าน" required minlength="6">
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">สมัครสมาชิก</button>
+            </form>
+
+            <div class="divider">
+                <span>หรือ</span>
+            </div>
+
+            <button id="googleLoginBtn" class="btn-google" type="button">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24">
+                สมัครสมาชิกด้วย Google
+            </button>
+
+            <div class="form-footer">
+                <p>มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from './js/firebase-init.js';
+        import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const submitBtn = document.getElementById('submitBtn');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const displayName = document.getElementById('displayName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (password !== confirmPassword) {
+                showError('รหัสผ่านไม่ตรงกัน');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
+
+            // Reset state
+            errorMessage.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'กำลังสมัครสมาชิก...';
+
+            try {
+                // Create user
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Update profile with display name
+                await updateProfile(user, {
+                    displayName: displayName
+                });
+
+                // Success - Redirect to home
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                let msg = 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
+                if (error.code === 'auth/email-already-in-use') msg = 'อีเมลนี้ถูกใช้งานแล้ว';
+                if (error.code === 'auth/invalid-email') msg = 'รูปแบบอีเมลไม่ถูกต้อง';
+                if (error.code === 'auth/weak-password') msg = 'รหัสผ่านไม่ปลอดภัยพอ';
+
+                showError(msg);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'สมัครสมาชิก';
+            }
+        });
+
+        // Google Login Handler
+        const provider = new GoogleAuthProvider();
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('googleLoginBtn');
+            const originalContent = btn.innerHTML;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังเชื่อมต่อ...';
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Success - Redirect to home
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Google Registration error:', error);
+                showError('เกิดข้อผิดพลาดในการเชื่อมต่อกับ Google: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        });
+
+        function showError(msg) {
+            errorText.textContent = msg;
+            errorMessage.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

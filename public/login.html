@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - DUYDODEE</title>
+
+    <!-- External Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #141414;
+            --primary-red: #e50914;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --error: #e87c03;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 60px 68px 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 450px;
+            min-height: 400px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 28px;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 16px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            font-family: 'Prompt', sans-serif;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-google:hover {
+            background: #f1f1f1;
+        }
+
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #181818;
+            padding: 48px 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 420px;
+            position: relative;
+            border: 1px solid #333;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            color: #737373;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">DUY<span>DOO</span>DEE</a>
+    </nav>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h1>เข้าสู่ระบบ</h1>
+            
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">เกิดข้อผิดพลาด</span>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="อีเมล" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="รหัสผ่าน" required>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">เข้าสู่ระบบ</button>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; color: #b3b3b3;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" checked> จดจำฉันไว้
+                    </label>
+                    <a href="#" id="forgotPasswordBtn" style="color: #b3b3b3; text-decoration: none;">ลืมรหัสผ่าน?</a>
+                </div>
+            </form>
+
+            <div style="display: flex; align-items: center; margin: 20px 0; color: #737373;">
+                <div style="flex: 1; height: 1px; background: #333;"></div>
+                <span style="padding: 0 10px; font-size: 12px;">หรือ</span>
+                <div style="flex: 1; height: 1px; background: #333;"></div>
+            </div>
+
+            <button id="googleLoginBtn" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24">
+                เข้าสู่ระบบด้วย Google
+            </button>
+
+            <div class="form-footer">
+                <p>ยังไม่มีบัญชี DUYDODEE ใช่ไหม? <a href="register.html">สมัครสมาชิกตอนนี้</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 60px; height: 60px; background: rgba(229, 9, 20, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <i class="fas fa-key" style="color: var(--primary-red); font-size: 24px;"></i>
+                </div>
+                <h2 style="margin-bottom: 8px; font-size: 24px; font-weight: 700;">รีเซ็ตรหัสผ่าน</h2>
+                <p style="color: #aaa; font-size: 14px; line-height: 1.5;">กรุณากรอกอีเมลที่ใช้สมัครสมาชิก ระบบจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ไปให้ทางอีเมล</p>
+            </div>
+            <form id="resetPasswordForm">
+                <div class="form-group">
+                    <input type="email" id="resetEmail" class="form-input" placeholder="อีเมลของคุณ" required>
+                </div>
+                <button type="submit" class="btn-submit">ส่งลิงก์รีเซ็ต</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from './js/firebase-init.js';
+        import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const provider = new GoogleAuthProvider();
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Email/Password Login
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Reset state
+                errorMessage.style.display = 'none';
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'กำลังเข้าสู่ระบบ...';
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Login error:', error);
+                    let msg = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') msg = 'ไม่พบผู้ใช้งานหรือรหัสผ่านผิด';
+                    if (error.code === 'auth/wrong-password') msg = 'รหัสผ่านไม่ถูกต้อง';
+                    if (error.code === 'auth/too-many-requests') msg = 'ลองใหม่ภายหลัง (Login บ่อยเกินไป)';
+                    
+                    errorText.textContent = msg;
+                    errorMessage.style.display = 'flex';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'เข้าสู่ระบบ';
+                }
+            });
+        }
+
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('googleLoginBtn');
+            const originalContent = btn.innerHTML;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังเชื่อมต่อ...';
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // ตรวจสอบว่าเป็น Admin หรือไม่
+                if (user.email === 'duy.kan1234@gmail.com') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorText.textContent = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ: ' + error.message;
+                errorMessage.style.display = 'flex';
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        });
+
+        // Forgot Password Logic
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const closeModalSpan = document.querySelector('.close-modal');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+
+        function openModal() {
+            forgotPasswordModal.style.display = 'flex';
+            setTimeout(() => forgotPasswordModal.classList.add('show'), 10);
+        }
+
+        function closeModal() {
+            forgotPasswordModal.classList.remove('show');
+            setTimeout(() => forgotPasswordModal.style.display = 'none', 300);
+        }
+
+        forgotPasswordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+
+        closeModalSpan.addEventListener('click', () => {
+            closeModal();
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModal) {
+                closeModal();
+            }
+        });
+
+        resetPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const btn = resetPasswordForm.querySelector('button');
+            const originalText = btn.textContent;
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'กำลังส่ง...';
+                await sendPasswordResetEmail(auth, email);
+                alert('ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลของคุณแล้ว กรุณาตรวจสอบกล่องจดหมาย');
+                closeModal();
+                resetPasswordForm.reset();
+            } catch (error) {
+                console.error(error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+    </script>
+</body>
+</html>

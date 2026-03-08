@@ -6,6 +6,10 @@ const compression = require('compression');
 const morgan = require('morgan');
 require('dotenv').config();
 
+// Import routes
+const moviesRoutes = require('./routes/movies');
+const authRoutes = require('./routes/auth');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,33 +32,167 @@ app.use(helmet({
         directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
             "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https:", "http:"],
-            "script-src-attr": ["'unsafe-inline'"],
             "style-src": ["'self'", "'unsafe-inline'", "https:", "http:"],
             "img-src": ["'self'", "data:", "https:", "http:"],
             "connect-src": ["'self'", "https:", "http:"],
             "font-src": ["'self'", "https:", "http:"],
             "object-src": ["'none'"],
             "media-src": ["'self'", "https:", "http:"],
-            "frame-src": ["'self'", "https:", "http:"],
-            "child-src": ["'self'", "https:", "http:"],
-            "worker-src": ["'self'", "blob:"],
-            "form-action": ["'self'"],
-            "default-src": ["'self'"],
-            "base-uri": ["'self'"],
-            "manifest-src": ["'self'"],
-            "upgrade-insecure-requests": []
-        }
-    }
+            "frame-src": ["'none'"],
+        },
+    },
 }));
-app.use(compression());
+
 app.use(cors(corsOptions));
+app.use(compression());
 app.use(morgan('combined'));
-app.use(express.json());
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/build', express.static(path.join(__dirname, 'public', 'build')));
+
+// API Routes
+app.use('/api/movies', moviesRoutes);
+app.use('/api/auth', authRoutes);
+
+// Mock AI routes
+app.post('/api/ai/process-youtube', (req, res) => {
+    try {
+        const { youtubeUrl, adminEmail } = req.body;
+
+        // Mock AI processing
+        setTimeout(() => {
+            res.json({
+                success: true,
+                data: {
+                    id: Date.now(),
+                    title: 'Mock Movie from YouTube',
+                    description: 'This is a mock movie generated from YouTube URL',
+                    year: new Date().getFullYear(),
+                    poster: '/assets/images/default-poster.jpg',
+                    rating: 8.5,
+                    status: 'active',
+                    createdAt: new Date()
+                },
+                message: 'YouTube URL processed successfully'
+            });
+        }, 1000);
+    } catch (error) {
+        console.error('Error processing YouTube URL:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to process YouTube URL'
+        });
+    }
+});
+
+app.post('/api/ai/batch-process', (req, res) => {
+    try {
+        const { urls, adminEmail } = req.body;
+
+        // Mock batch processing
+        setTimeout(() => {
+            const results = urls.map((url, index) => ({
+                success: true,
+                movieData: {
+                    id: Date.now() + index,
+                    title: `Mock Movie ${index + 1}`,
+                    description: 'Mock movie from batch processing',
+                    year: new Date().getFullYear(),
+                    poster: '/assets/images/default-poster.jpg',
+                    rating: 8.0,
+                    status: 'active',
+                    createdAt: new Date()
+                }
+            }));
+
+            res.json({
+                success: true,
+                data: {
+                    results,
+                    total: results.length,
+                    processed: results.length,
+                    failed: 0
+                },
+                message: 'Batch processing completed successfully'
+            });
+        }, 2000);
+    } catch (error) {
+        console.error('Error batch processing:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to batch process URLs'
+        });
+    }
+});
+
+// Admin routes
+app.get('/api/admin/stats', (req, res) => {
+    try {
+        res.json({
+            success: true,
+            data: {
+                totalMovies: 5,
+                totalUsers: 2,
+                totalViews: 15420,
+                totalRevenue: 0
+            }
+        });
+    } catch (error) {
+        console.error('Error getting stats:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to get stats'
+        });
+    }
+});
+
+app.get('/api/admin/users', (req, res) => {
+    try {
+        res.json({
+            success: true,
+            data: [
+                {
+                    id: 1,
+                    email: 'duy.kan1234@gmail.com',
+                    displayName: 'DUYDOO Admin',
+                    role: 'admin',
+                    avatar: '/assets/images/admin-avatar.jpg',
+                    status: 'active',
+                    createdAt: new Date('2023-01-01')
+                },
+                {
+                    id: 2,
+                    email: 'user@example.com',
+                    displayName: 'Test User',
+                    role: 'user',
+                    avatar: '/assets/images/default-avatar.jpg',
+                    status: 'active',
+                    createdAt: new Date('2023-06-15')
+                }
+            ]
+        });
+    } catch (error) {
+        console.error('Error getting users:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to get users'
+        });
+    }
+});
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
-    res.json({ success: true, message: 'Server is working!' });
+    res.json({
+        success: true,
+        message: 'Server is working!',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
 
 // Health check endpoint for production
@@ -67,119 +205,11 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Movies endpoint with mock data
-app.get('/api/movies', (req, res) => {
-    const { id } = req.query;
-
-    if (id) {
-        // Return single movie (mock)
-        const movie = {
-            id: id,
-            title: 'Sample Movie',
-            description: 'This is a sample movie for testing',
-            poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop',
-            rating: 8.5,
-            year: 2024,
-            category: 'movie',
-            youtube: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-            link: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0',
-            viewCount: 1000,
-            isVip: false,
-            platform: 'Movie',
-            status: 'active'
-        };
-        return res.json({ success: true, data: movie });
-    }
-
-    // Return all movies (mock)
-    const movies = [
-        {
-            id: '1',
-            title: 'ซีรีส์สับประหลาดทะลุมิติ',
-            description: 'ซีรีส์แฟนตาซีสุดมันส์',
-            poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1925&auto=format&fit=crop',
-            rating: 8.5,
-            year: 2024,
-            category: 'series',
-            youtube: 'https://www.youtube.com/watch?v=example1',
-            link: 'https://www.youtube.com/embed/example1?autoplay=1&rel=0',
-            viewCount: 15420,
-            isVip: false,
-            platform: 'Series',
-            status: 'active'
-        },
-        {
-            id: '2',
-            title: 'รักนี้ทะลุจอ',
-            description: 'ซีรีส์รักโรแมนติก',
-            poster: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2000&auto=format&fit=crop',
-            rating: 9.0,
-            year: 2024,
-            category: 'vertical',
-            youtube: 'https://www.youtube.com/watch?v=example2',
-            link: 'https://www.youtube.com/embed/example2?autoplay=1&rel=0',
-            viewCount: 28950,
-            isVip: true,
-            platform: 'Vertical',
-            status: 'active'
-        }
-    ];
-
-    res.json({ success: true, data: movies });
+// Serve HTML files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Auth endpoint (mock)
-app.post('/api/auth/google', (req, res) => {
-    const user = {
-        uid: 'admin-user-id',
-        email: 'duy.kan1234@gmail.com',
-        displayName: 'DUYDOO Admin',
-        photoURL: 'https://via.placeholder.com/100x100?text=Admin',
-        isVip: true,
-        role: 'admin'
-    };
-    res.json({ success: true, data: user, message: 'Login successful' });
-});
-
-// Comments endpoint (mock)
-app.get('/api/comments', (req, res) => {
-    const { movieId } = req.query;
-    const comments = [
-        {
-            id: '1',
-            movieId: movieId || '1',
-            userId: 'user1@example.com',
-            userName: 'User One',
-            userPic: 'https://via.placeholder.com/40',
-            text: 'ซีรีส์เรื่องนี้สุดยอดมาก!',
-            createdAt: new Date()
-        },
-        {
-            id: '2',
-            movieId: movieId || '1',
-            userId: 'user2@example.com',
-            userName: 'User Two',
-            userPic: 'https://via.placeholder.com/40',
-            text: 'ชอบมาก รอตอนต่อไป',
-            createdAt: new Date()
-        }
-    ];
-    res.json({ success: true, data: comments });
-});
-
-// Announcement endpoint (mock)
-app.get('/api/announcement', (req, res) => {
-    res.json({
-        success: true,
-        announcement: {
-            title: '🎉 อัปเดตซีรีส์ใหม่!',
-            content: 'เพิ่มซีรีส์ใหม่ทุกวัน อย่าลืมมาดูกันนะครับ!',
-            active: true
-        }
-    });
-});
-
-// Admin routes
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
@@ -188,25 +218,51 @@ app.get('/admin-dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin-dashboard.html'));
 });
 
-// Favicon endpoint
-app.get('/favicon.ico', (req, res) => {
-    res.status(204).end();
+app.get('/admin-ai-processor', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin-ai-processor.html'));
 });
 
-// 404 handler - serve index.html for SPA routing
-app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/watch-enhanced', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'watch-enhanced.html'));
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    res.status(err.status || 500).json({
+        success: false,
+        error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
+    });
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log('==========================================');
-    console.log('🚀 DUYDODEE Server Started Successfully!');
+    console.log('🚀 DUYDODEE Streaming Platform');
     console.log('==========================================');
-    console.log(`📱 Frontend: http://localhost:${PORT}`);
-    console.log(`🌐 Network Access: http://0.0.0.0:${PORT}`);
-    console.log(`🔧 Admin Panel: http://localhost:${PORT}/admin`);
-    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`� Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌐 Server running on: http://localhost:${PORT}`);
+    console.log(`� Admin Panel: http://localhost:${PORT}/admin`);
+    console.log(`🤖 AI Processor: http://localhost:${PORT}/admin-ai-processor`);
+    console.log(`📊 Health Check: http://localhost:${PORT}/health`);
     console.log('==========================================');
 });
 

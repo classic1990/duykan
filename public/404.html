@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ไม่พบหน้านี้ (404) - DUYDODEE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #141414;
+            --primary-red: #e50914;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        .illustration {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+            /* ถ้าใช้รูป SVG จาก Undraw สามารถปรับสีได้ที่หน้าเว็บ Undraw ก่อนดาวน์โหลด */
+        }
+        h1 {
+            font-size: 4rem;
+            margin: 0 0 10px;
+            color: var(--primary-red);
+            font-weight: 700;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background-color: var(--primary-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+        .btn:hover {
+            background-color: #b20710;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6);
+        }
+        .search-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .search-input {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: white;
+            width: 250px;
+            font-family: 'Prompt', sans-serif;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--primary-red);
+        }
+        .search-btn {
+            background: #333;
+            border: none;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .search-btn:hover {
+            background: var(--primary-red);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- แนะนำ: ไปที่ undraw.co ค้นหา "Page Not Found" เลือกสีแดง (#e50914) ดาวน์โหลด SVG และนำมาวางแทนที่ src ด้านล่าง -->
+        <img src="https://placehold.co/600x400/1f1f1f/e50914?text=404+Page+Not+Found&font=roboto" alt="404 Not Found" class="illustration">
+        <h1>404</h1>
+        <p>ขออภัย ไม่พบหน้าที่คุณต้องการ<br>หน้านี้อาจถูกลบ ย้าย หรือคุณอาจพิมพ์ลิงก์ผิด</p>
+        
+        <div class="search-container">
+            <input type="text" id="search404" class="search-input" placeholder="ลองค้นหาหนังดูไหม?">
+            <button onclick="searchMovie()" class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <br>
+
+        <a href="/" class="btn"><i class="fas fa-home"></i> กลับหน้าหลัก</a>
+    </div>
+    <script>
+        function searchMovie() {
+            const query = document.getElementById('search404').value;
+            if(query.trim()) {
+                window.location.href = '/?search=' + encodeURIComponent(query.trim());
+            }
+        }
+        document.getElementById('search404').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') searchMovie();
+        });
+    </script>
+</body>
+</html>
