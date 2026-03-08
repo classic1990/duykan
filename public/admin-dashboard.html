@@ -1511,7 +1511,14 @@
                         method: 'DELETE'
                     });
 
-                    const result = await response.json();
+                    let result;
+                    try {
+                        result = await response.json();
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError);
+                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
+                        return false;
+                    }
 
                     if (result.success) {
                         Utils.showToast('ลบหนังสำเร็จ', 'success');
