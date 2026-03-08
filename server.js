@@ -9,6 +9,7 @@ require('dotenv').config();
 // Import routes
 const moviesRoutes = require('./routes/movies');
 const authRoutes = require('./routes/auth');
+const authGoogleRoutes = require('./routes/auth-google');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -58,6 +59,7 @@ app.use('/build', express.static(path.join(__dirname, 'public', 'build')));
 // API Routes
 app.use('/api/movies', moviesRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/auth', authGoogleRoutes);
 
 // Mock AI routes
 app.post('/api/ai/process-youtube', (req, res) => {
