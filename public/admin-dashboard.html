@@ -1308,7 +1308,14 @@
                         })
                     });
 
-                    const result = await response.json();
+                    let result;
+                    try {
+                        result = await response.json();
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError);
+                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
+                        return;
+                    }
 
                     if (result.success) {
                         Utils.showToast('ประมวลอง YouTube URL สำเร็จ', 'success');
@@ -1360,7 +1367,14 @@
                         })
                     });
 
-                    const result = await response.json();
+                    let result;
+                    try {
+                        result = await response.json();
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError);
+                        Utils.showToast('ข้อผิดในการตอบสนองข้อมูล: ' + jsonError.message, 'error');
+                        return;
+                    }
 
                     if (result.success) {
                         Utils.showToast(`ประมวลอง YouTube URLs ${urls.length} รายการสำเร็จ`, 'success');
